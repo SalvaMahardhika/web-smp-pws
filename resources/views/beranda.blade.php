@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SMPN 1 Purwosari</title>
 
-    <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
@@ -19,32 +17,16 @@
 </head>
 <body class="bg-gray-100">
 
-<!-- NAVBAR -->
-<nav class="flex justify-between items-center px-10 py-4 bg-white shadow">
-    <div class="flex items-center gap-3">
-        <img src="{{ asset('img/logo.png') }}" class="w-12">
-        <div>
-            <h2 class="text-blue-500 font-bold text-lg">SMPN 1 Purwosari</h2>
-            <p class="text-sm text-gray-500">Sekolah Standart Nasional (SSN)</p>
-        </div>
-    </div>
-
-    <ul class="flex gap-8 font-medium">
-        <li><a href="#">Beranda</a></li>
-        <li><a href="#">Profile</a></li>
-        <li><a href="#">Data</a></li>
-        <li><a href="#">Galeri</a></li>
-        <li><a href="#">Kontak</a></li>
-    </ul>
-</nav>
+<!-- ✅ NAVBAR COMPONENT -->
+<x-navbar />
 
 <!-- HERO -->
-<section class="relative h-[90vh] flex items-center px-10 text-white">
+<section class="relative z-0 h-[90vh] flex items-center px-10 text-white">
 
     <img src="{{ asset('img/image1.png') }}" 
-         class="absolute inset-0 w-full h-full object-cover">
+         class="absolute inset-0 w-full h-full object-cover z-0">
 
-    <div class="absolute inset-0 bg-blue-900/80"></div>
+    <div class="absolute inset-0 bg-blue-900/80 z-0"></div>
 
     <div class="relative z-10 max-w-xl">
         <h1 class="text-5xl font-bold leading-tight">
@@ -72,7 +54,6 @@
             <img src="{{ asset('img/berita1.png') }}" class="h-52 w-full object-cover">
             <p class="p-5 font-medium">
                 Future Coders: Pelatihan Koding AI SMPN 1 Purwosari 
-                pppppppppppppppppppppppppppppppppppppppppppppppp ajifhiaugfuawhfduawfhuawfhuahwfukawfhuakwfhuakwfhuawkfhuahhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhk pppppppppppppppppppppppppppppppp
             </p>
         </div>
 
@@ -102,7 +83,6 @@
 
     <div class="grid grid-cols-3 gap-8 mt-12">
 
-        <!-- ITEM -->
         @php
             $fasilitas = [
                 ['01','Ruang Kelas','Ruang kelas dengan kapasitas maksimal 25 siswa per kelas'],
@@ -119,20 +99,16 @@
 
         @foreach ($fasilitas as $item)
         <div class="bg-white p-6 rounded-2xl shadow-md text-left flex items-start gap-4 hover:shadow-lg transition">
-
-            <!-- NOMOR -->
             <div class="border rounded-lg px-4 py-2 font-bold text-lg">
                 {{ $item[0] }}
             </div>
 
-            <!-- TEXT -->
             <div>
                 <h3 class="font-semibold text-lg">{{ $item[1] }}</h3>
                 <p class="text-gray-500 text-sm mt-1">
                     {{ $item[2] }}
                 </p>
             </div>
-
         </div>
         @endforeach
 
@@ -149,8 +125,8 @@
             <img src="{{ asset('img/futsal.png') }}" class="w-1/3 object-cover">
             <div class="p-6">
                 <h3 class="text-xl font-bold">FUTSAL</h3>
-                <p class="text-gray-600 mt-2">halo halo halo halo halo
-                    hidup jokowi
+                <p class="text-gray-600 mt-2">
+                    Kegiatan olahraga yang melatih kerjasama tim dan kebugaran siswa.
                 </p>
             </div>
         </div>
