@@ -53,5 +53,7 @@
 
 </section>
 
+<x-footer />
+
 </body>
 </html>

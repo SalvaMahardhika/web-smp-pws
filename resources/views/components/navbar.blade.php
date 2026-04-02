@@ -35,7 +35,7 @@
                 </li>
 
                 <li>
-                    <a href="#" class="block px-4 py-2 hover:bg-gray-100">
+                    <a href="{{ route('struktur') }}" class="block px-4 py-2 hover:bg-gray-100">
                         Struktur Organisasi
                     </a>
                 </li>
@@ -52,13 +52,18 @@
             <div class="absolute top-full left-0 w-full h-3"></div>
 
             <ul class="absolute top-full left-0 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-200 bg-white shadow-lg rounded-lg mt-1 w-48 text-left">
-                <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Data Siswa</a></li>
-                <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Data Guru</a></li>
+                <li><a href="{{ route('data.siswa') }}" class="block px-4 py-2 hover:bg-gray-100">
+                    Data Siswa
+                </a></li>
+
+                <li><a href="{{ route('data.guru') }}" class="block px-4 py-2 hover:bg-gray-100">
+                    Data Guru
+                </a></li>
             </ul>
         </li>
 
-        <li><a href="#" class="hover:text-blue-500">Galeri</a></li>
-        <li><a href="#" class="hover:text-blue-500">Kontak</a></li>
+        <li><a href="{{ route('galeri') }}">Galeri</a></li>
+        <li><a href="{{ route('kontak') }}">Kontak</a></li>
 
     </ul>
 </nav>
