@@ -3,90 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Siswa - SMPN 1 Purwosari</title>
+    <title>Data Siswa</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <style>
-        body { font-family: 'Poppins', sans-serif; }
-        
-        /* Sembunyikan scrollbar di mobile agar rapi */
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
 </head>
 <body class="bg-gray-100">
 
 <x-navbar />
 
-<section class="text-center py-10 md:py-16 px-4">
-    <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900">Data Siswa</h1>
-    <p class="text-gray-500 mt-3 text-sm md:text-lg">Informasi jumlah siswa tiap kelas</p>
-</section>
+<div class="max-w-6xl mx-auto py-10 space-y-10">
+
+<!-- ALERT -->
+@if(session('error'))
+<div class="bg-red-100 text-red-700 p-3 rounded">{{ session('error') }}</div>
+@endif
+
+@if(session('success'))
+<div class="bg-green-100 text-green-700 p-3 rounded">{{ session('success') }}</div>
+@endif
 
 @php
-function renderKelasScroll($kelasList) {
-    foreach ($kelasList as $kelas) {
+function renderKelas($data){
+    foreach($data as $k){
+
         echo '
-        <div class="flex-shrink-0 w-[280px] md:w-auto md:min-w-[200px] snap-center bg-gray-50 p-6 rounded-2xl border border-gray-100 shadow-sm">
-            <h3 class="font-bold text-xl text-blue-600 mb-4 text-center md:text-left">'.$kelas.'</h3>
-            <div class="space-y-3 text-sm text-gray-600">
-                <div class="flex justify-between items-center">
-                    <span>Laki-laki</span>
-                    <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-md font-bold">20</span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span>Perempuan</span>
-                    <span class="bg-pink-100 text-pink-700 px-2 py-1 rounded-md font-bold">14</span>
-                </div>
-                <div class="pt-3 border-t border-gray-200 flex justify-between font-black text-gray-900 text-base">
-                    <span>Total</span>
-                    <span>34</span>
-                </div>
+        <div class="bg-gray-50 p-4 rounded-xl shadow relative">
+
+            '.(session('login') ? '
+            <div class="absolute bottom-3 right-3 flex gap-2">
+                <button onclick="openEdit('.$k->id_siswa.', '.$k->jumlah_laki.', '.$k->jumlah_perempuan.')" class="text-blue-500">✏️</button>
+                <button onclick="openDelete('.$k->id_siswa.')" class="text-gray-600">🗑️</button>
             </div>
+            ' : '').'
+
+            <h3 class="font-bold">'.$k->kelas.'</h3>
+            <p>Laki-laki: '.$k->jumlah_laki.'</p>
+            <p>Perempuan: '.$k->jumlah_perempuan.'</p>
+            <p class="font-bold">Jumlah: '.$k->jumlah_siswa.'</p>
         </div>
         ';
     }
 }
 @endphp
 
-<div class="max-w-7xl mx-auto pb-20 space-y-12">
-    
-    <section>
-        <div class="px-6 md:px-10 mb-4 flex items-center gap-3">
-            <div class="w-2 h-8 bg-blue-600 rounded-full"></div>
-            <h2 class="text-2xl font-bold text-gray-800">Kelas 7</h2>
-        </div>
-        
-        <div class="flex overflow-x-auto snap-x snap-mandatory gap-6 px-6 md:px-10 pb-6 hide-scrollbar md:grid md:grid-cols-3 lg:grid-cols-5 md:overflow-visible">
-            {!! renderKelasScroll(['7A','7B','7C','7D','7E','7F','7G','7H','7I']) !!}
-        </div>
-    </section>
+<!-- LOOP -->
+@foreach(['7','8','9'] as $kelas)
+<section>
 
-    <section>
-        <div class="px-6 md:px-10 mb-4 flex items-center gap-3">
-            <div class="w-2 h-8 bg-blue-600 rounded-full"></div>
-            <h2 class="text-2xl font-bold text-gray-800">Kelas 8</h2>
-        </div>
-        <div class="flex overflow-x-auto snap-x snap-mandatory gap-6 px-6 md:px-10 pb-6 hide-scrollbar md:grid md:grid-cols-3 lg:grid-cols-5 md:overflow-visible">
-            {!! renderKelasScroll(['8A','8B','8C','8D','8E','8F','8G','8H','8I']) !!}
-        </div>
-    </section>
+    @if(session('login'))
+    <button onclick="openTambah('{{ $kelas }}')" class="bg-blue-500 text-white px-3 py-1 rounded mb-3">
+        + Tambah Kelas
+    </button>
+    @endif
 
-    <section>
-        <div class="px-6 md:px-10 mb-4 flex items-center gap-3">
-            <div class="w-2 h-8 bg-blue-600 rounded-full"></div>
-            <h2 class="text-2xl font-bold text-gray-800">Kelas 9</h2>
+    <div class="bg-white p-6 rounded-xl shadow">
+        <h2 class="font-bold text-lg mb-4">Kelas {{ $kelas }}</h2>
+        <div class="grid grid-cols-5 gap-4">
+            {!! renderKelas(${'kelas'.$kelas}) !!}
         </div>
-        <div class="flex overflow-x-auto snap-x snap-mandatory gap-6 px-6 md:px-10 pb-6 hide-scrollbar md:grid md:grid-cols-3 lg:grid-cols-5 md:overflow-visible">
-            {!! renderKelasScroll(['9A','9B','9C','9D','9E','9F','9G','9H','9I']) !!}
-        </div>
-    </section>
+    </div>
+
+</section>
+@endforeach
 
 </div>
 
+<!-- ================= MODAL TAMBAH ================= -->
+<div id="tambahModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-xl w-80">
+
+        <h2 id="titleTambah" class="text-center font-bold mb-4"></h2>
+
+        <form method="POST" action="/siswa/store" onsubmit="return validateTambah()">
+            @csrf
+
+            <!-- DROPDOWN -->
+            <select name="kelas" id="dropdownKelas"
+                class="w-full border p-2 rounded mb-3">
+            </select>
+
+            <input type="number" name="jumlah_laki" id="inputLaki" placeholder="Laki-laki"
+                class="w-full border p-2 rounded mb-3" min="0">
+
+            <input type="number" name="jumlah_perempuan" id="inputPerempuan" placeholder="Perempuan"
+                class="w-full border p-2 rounded mb-3" min="0">
+
+            <p id="errorMsg" class="text-red-500 text-sm mb-2 hidden"></p>
+
+            <div class="flex justify-end gap-2">
+                <button type="button" onclick="closeModal('tambahModal')" class="bg-red-400 text-white px-3 py-1 rounded">Batal</button>
+                <button class="bg-blue-500 text-white px-3 py-1 rounded">Simpan</button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<!-- ================= MODAL EDIT ================= -->
+<div id="editModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-xl w-80">
+
+        <h2 class="text-center font-bold mb-4">Edit Jumlah</h2>
+
+        <form method="POST" id="editForm" onsubmit="return validateEdit()">
+            @csrf
+
+            <input type="number" name="jumlah_laki" id="editLaki"
+                class="w-full border p-2 rounded mb-3" min="0">
+
+            <input type="number" name="jumlah_perempuan" id="editPerempuan"
+                class="w-full border p-2 rounded mb-3" min="0">
+
+            <p id="editError" class="text-red-500 text-sm mb-2 hidden"></p>
+
+            <div class="flex justify-end gap-2">
+                <button type="button" onclick="closeModal('editModal')" class="bg-red-400 text-white px-3 py-1 rounded">Batal</button>
+                <button class="bg-blue-500 text-white px-3 py-1 rounded">Simpan</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<!-- ================= MODAL DELETE ================= -->
+<div id="deleteModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-xl text-center">
+
+        <p class="mb-4">Apakah anda yakin?</p>
+
+        <form method="POST" id="deleteForm">
+            @csrf
+            @method('DELETE')
+
+            <button class="bg-blue-500 text-white px-4 py-2 rounded">
+                Ya hapus saja
+            </button>
+        </form>
+
+        <button onclick="closeModal('deleteModal')" class="mt-2 text-red-500">
+            Batal
+        </button>
+    </div>
+</div>
+
 <x-footer />
+
+<!-- ================= SCRIPT ================= -->
+<script>
+
+function openTambah(kelas){
+    document.getElementById('tambahModal').classList.remove('hidden');
+    document.getElementById('titleTambah').innerText = 'Tambah Kelas ' + kelas;
+
+    let dropdown = document.getElementById('dropdownKelas');
+    dropdown.innerHTML = '';
+
+    let huruf = ['A','B','C','D','E','F','G','H','I'];
+
+    huruf.forEach(h => {
+        let opt = document.createElement('option');
+        opt.value = kelas + h;
+        opt.text = kelas + h;
+        dropdown.appendChild(opt);
+    });
+}
+
+function validateTambah(){
+    let laki = document.getElementById('inputLaki').value;
+    let perempuan = document.getElementById('inputPerempuan').value;
+    let error = document.getElementById('errorMsg');
+
+    if(laki === '' || perempuan === ''){
+        error.innerText = 'Semua field wajib diisi';
+        error.classList.remove('hidden');
+        return false;
+    }
+
+    if(laki < 0 || perempuan < 0){
+        error.innerText = 'Tidak boleh angka negatif';
+        error.classList.remove('hidden');
+        return false;
+    }
+
+    return true;
+}
+
+function validateEdit(){
+    let laki = document.getElementById('editLaki').value;
+    let perempuan = document.getElementById('editPerempuan').value;
+    let error = document.getElementById('editError');
+
+    if(laki === '' || perempuan === ''){
+        error.innerText = 'Tidak boleh kosong';
+        error.classList.remove('hidden');
+        return false;
+    }
+
+    if(laki < 0 || perempuan < 0){
+        error.innerText = 'Tidak boleh negatif';
+        error.classList.remove('hidden');
+        return false;
+    }
+
+    return true;
+}
+
+function openEdit(id, laki, perempuan){
+    document.getElementById('editModal').classList.remove('hidden');
+    document.getElementById('editLaki').value = laki;
+    document.getElementById('editPerempuan').value = perempuan;
+    document.getElementById('editForm').action = '/siswa/update/' + id;
+}
+
+function openDelete(id){
+    document.getElementById('deleteModal').classList.remove('hidden');
+    document.getElementById('deleteForm').action = '/siswa/delete/' + id;
+}
+
+function closeModal(id){
+    document.getElementById(id).classList.add('hidden');
+}
+
+</script>
 
 </body>
 </html>

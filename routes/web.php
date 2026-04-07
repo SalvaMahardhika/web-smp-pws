@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Login\LoginController;
 use App\Http\Controllers\GuruController;
+use App\Http\Controllers\SiswaController;
 
 /* =========================
    HALAMAN PUBLIC
@@ -13,8 +14,13 @@ Route::get('/sejarah', fn() => view('sejarah'))->name('sejarah');
 Route::get('/visimisi', fn() => view('visimisi'))->name('visimisi');
 Route::get('/galeri', fn() => view('galeri'))->name('galeri');
 Route::get('/kontak', fn() => view('kontak'))->name('kontak');
-Route::get('/data-siswa', fn() => view('datasiswa'))->name('data.siswa');
 Route::get('/struktur-organisasi', fn() => view('strukturorg'))->name('struktur');
+
+//data siswa
+Route::get('/data-siswa', [SiswaController::class, 'index'])->name('data.siswa');
+Route::post('/siswa/update/{id}', [SiswaController::class, 'update'])->name('siswa.update');
+Route::post('/siswa/store', [SiswaController::class, 'store']);
+Route::delete('/siswa/delete/{id}', [SiswaController::class, 'destroy']);
 
 /* =========================
    DATA GURU
@@ -40,3 +46,5 @@ Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 ========================= */
 
 Route::post('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
+
+//
