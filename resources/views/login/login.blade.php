@@ -48,7 +48,7 @@
                     </svg>
 
                     <input type="text" name="email"
-                        placeholder="Username or Email"
+                        placeholder="Email"
                         class="bg-transparent w-full outline-none text-white placeholder-gray-300">
                 </div>
             </div>

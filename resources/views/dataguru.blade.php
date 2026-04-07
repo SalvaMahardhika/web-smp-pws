@@ -76,20 +76,7 @@
                 </tr>
                 @endforeach
 
-                @foreach ($guru as $index => $g)
-                <tr class="hover:bg-gray-50">
-                    <td class="border px-3 py-2 text-center">{{ $index + 1 }}</td>
-                    <td class="border px-3 py-2">{{ $g[0] }}</td>
-                    <td class="border px-3 py-2">{{ $g[1] }}</td>
-
-                    @if(session('login'))
-                    <td class="border px-3 py-2 text-center">
-                        <button onclick="openEdit({{ $index }}, '{{ $g[0] }}', '{{ $g[1] }}')" class="text-blue-500">✏️</button>
-                        <button onclick="openDelete({{ $index }})" class="text-red-500 ml-2">🗑️</button>
-                    </td>
-                    @endif
-                </tr>
-                @endforeach
+                
             </tbody>
 
         </table>
