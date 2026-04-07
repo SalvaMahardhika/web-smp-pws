@@ -1,50 +1,26 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-//ini untuk pindah tiap halaman bro
-Route::get('/', function () {
-    return view('beranda');
-})->name('beranda');
-
-Route::get('/sejarah', function () {
-    return view('sejarah');
-})->name('sejarah');
-
-Route::get('/visimisi', function () {
-    return view('visimisi');
-})->name('visimisi');
-
-Route::get('/galeri', function () {
-    return view('galeri');
-})->name('galeri');
-
-Route::get('/kontak', function () {
-    return view('kontak');
-})->name('kontak');
-
-Route::get('/data-siswa', function () {
-    return view('datasiswa');
-})->name('data.siswa');
-
-Route::get('/data-guru', function () {
-    return view('dataguru');
-})->name('data.guru');
-
-Route::get('/struktur-organisasi', function () {
-    return view('strukturorg');
-})->name('struktur');
-
-
-//coba halaman login
-Route::get('/auth-smp-admin-2026', function () {
-    return view('login.login');
-})->name('login.admin');
-
-
-//fungsi login
 use App\Http\Controllers\Login\LoginController;
+use App\Http\Controllers\GuruController;
 
-Route::get('/auth-smp-admin-2026', [LoginController::class, 'index']);
+// halaman public
+Route::get('/', fn() => view('beranda'))->name('beranda');
+Route::get('/sejarah', fn() => view('sejarah'))->name('sejarah');
+Route::get('/visimisi', fn() => view('visimisi'))->name('visimisi');
+Route::get('/galeri', fn() => view('galeri'))->name('galeri');
+Route::get('/kontak', fn() => view('kontak'))->name('kontak');
+Route::get('/data-siswa', fn() => view('datasiswa'))->name('data.siswa');
+Route::get('/struktur-organisasi', fn() => view('strukturorg'))->name('struktur');
+
+// data guru (pakai controller)
+Route::get('/data-guru', [GuruController::class, 'index'])->name('data.guru');
+
+Route::post('/guru/store', [GuruController::class, 'store'])->name('guru.store');
+Route::post('/guru/update/{id}', [GuruController::class, 'update'])->name('guru.update');
+Route::delete('/guru/delete/{id}', [GuruController::class, 'destroy'])->name('guru.delete');
+
+// login
+Route::get('/auth-smp-admin-2026', [LoginController::class, 'index'])->name('login.admin');
 Route::post('/auth-smp-admin-2026', [LoginController::class, 'login']);
 Route::get('/logout', [LoginController::class, 'logout']);
