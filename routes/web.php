@@ -47,4 +47,13 @@ Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::post('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
 
-//
+// halaman kelola akun (hanya super admin)
+Route::get('/kelola-akun', function () {
+
+    if (session('role') !== 'super_admin') {
+        abort(403);
+    }
+
+    return view('kelolaakun');
+
+})->name('kelola.akun');

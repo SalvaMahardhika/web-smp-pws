@@ -11,33 +11,42 @@
 
         <div class="hidden lg:flex items-center gap-8">
             <ul class="flex gap-8 font-medium text-gray-700 items-center">
-                <li><a href="{{ route('beranda') }}" class="hover:text-blue-500 transition">Beranda</a></li>
+                <li><a href="{{ route('beranda') }}" class="hover:text-blue-500 transition font-semibold text-blue-600">Beranda</a></li>
 
                 <li class="relative group cursor-pointer">
-                    <button class="flex items-center gap-1 hover:text-blue-500 transition focus:outline-none">
+                    <button class="flex items-center gap-1 hover:text-blue-500 transition focus:outline-none font-semibold text-blue-600">
                         Profile <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     <div class="absolute top-full left-0 w-full h-3"></div>
                     <ul class="absolute top-full left-0 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 bg-white shadow-xl rounded-xl mt-1 w-48 py-2 border border-gray-100">
-                        <li><a href="{{ route('sejarah') }}" class="block px-4 py-2 hover:bg-blue-50 hover:text-blue-600">Sejarah</a></li>
-                        <li><a href="{{ route('visimisi') }}" class="block px-4 py-2 hover:bg-blue-50 hover:text-blue-600">Visi Misi</a></li>
-                        <li><a href="{{ route('struktur') }}" class="block px-4 py-2 hover:bg-blue-50 hover:text-blue-600">Struktur Organisasi</a></li>
+                        <li><a href="{{ route('sejarah') }}" class="block px-4 py-2 hover:bg-blue-50 hover:text-blue-600 font-semibold text-blue-600">Sejarah</a></li>
+                        <li><a href="{{ route('visimisi') }}" class="block px-4 py-2 hover:bg-blue-50 hover:text-blue-600 font-semibold text-blue-600">Visi Misi</a></li>
+                        <li><a href="{{ route('struktur') }}" class="block px-4 py-2 hover:bg-blue-50 hover:text-blue-600 font-semibold text-blue-600">Struktur Organisasi</a></li>
                     </ul>
                 </li>
 
                 <li class="relative group cursor-pointer">
-                    <button class="flex items-center gap-1 hover:text-blue-500 transition focus:outline-none">
+                    <button class="flex items-center gap-1 hover:text-blue-500 transition focus:outline-none font-semibold text-blue-600">
                         Data <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     <div class="absolute top-full left-0 w-full h-3"></div>
                     <ul class="absolute top-full left-0 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 bg-white shadow-xl rounded-xl mt-1 w-48 py-2 border border-gray-100">
-                        <li><a href="{{ route('data.siswa') }}" class="block px-4 py-2 hover:bg-blue-50 hover:text-blue-600">Data Siswa</a></li>
-                        <li><a href="{{ route('data.guru') }}" class="block px-4 py-2 hover:bg-blue-50 hover:text-blue-600">Data Guru</a></li>
+                        <li><a href="{{ route('data.siswa') }}" class="block px-4 py-2 hover:bg-blue-50 hover:text-blue-600 font-semibold text-blue-600">Data Siswa</a></li>
+                        <li><a href="{{ route('data.guru') }}" class="block px-4 py-2 hover:bg-blue-50 hover:text-blue-600 font-semibold text-blue-600">Data Guru</a></li>
                     </ul>
                 </li>
 
-                <li><a href="{{ route('galeri') }}" class="hover:text-blue-500 transition">Galeri</a></li>
-                <li><a href="{{ route('kontak') }}" class="hover:text-blue-500 transition">Kontak</a></li>
+                <li><a href="{{ route('galeri') }}" class="hover:text-blue-500 transition font-semibold text-blue-600">Galeri</a></li>
+                <li><a href="{{ route('kontak') }}" class="hover:text-blue-500 transition font-semibold text-blue-600">Kontak</a></li>
+
+                @if(session('role') === 'super_admin')
+                <li>
+                    <a href="{{ route('kelola.akun') }}" 
+                       class="hover:text-blue-500 transition font-semibold text-blue-600">
+                       Kelola Akun
+                    </a>
+                </li>
+                @endif
             </ul>
 
             @if(session('login'))
@@ -86,31 +95,38 @@
 
     <div id="mobileMenu" class="hidden lg:hidden bg-white border-t border-gray-100 overflow-hidden">
         <div class="px-4 py-6 space-y-4 font-medium text-gray-700">
-            <a href="{{ route('beranda') }}" class="block py-2 border-b border-gray-50 hover:text-blue-500">Beranda</a>
+            <a href="{{ route('beranda') }}" class="block py-2 border-b border-gray-50 hover:text-blue-500 font-semibold text-blue-600">Beranda</a>
             
             <details class="group">
-                <summary class="flex justify-between items-center list-none py-2 border-b border-gray-50 cursor-pointer hover:text-blue-500">
+                <summary class="flex justify-between items-center list-none py-2 border-b border-gray-50 cursor-pointer hover:text-blue-500 font-semibold text-blue-600">
                     Profile <svg class="w-4 h-4 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 </summary>
                 <div class="pl-4 mt-2 space-y-2 text-sm text-gray-600">
-                    <a href="{{ route('sejarah') }}" class="block py-2">Sejarah</a>
-                    <a href="{{ route('visimisi') }}" class="block py-2">Visi Misi</a>
-                    <a href="{{ route('struktur') }}" class="block py-2">Struktur Organisasi</a>
+                    <a href="{{ route('sejarah') }}" class="block py-2 font-semibold text-blue-600">Sejarah</a>
+                    <a href="{{ route('visimisi') }}" class="block py-2 font-semibold text-blue-600">Visi Misi</a>
+                    <a href="{{ route('struktur') }}" class="block py-2 font-semibold text-blue-600">Struktur Organisasi</a>
                 </div>
             </details>
 
             <details class="group">
-                <summary class="flex justify-between items-center list-none py-2 border-b border-gray-50 cursor-pointer hover:text-blue-500">
+                <summary class="flex justify-between items-center list-none py-2 border-b border-gray-50 cursor-pointer hover:text-blue-500 font-semibold text-blue-600">
                     Data <svg class="w-4 h-4 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 </summary>
                 <div class="pl-4 mt-2 space-y-2 text-sm text-gray-600">
-                    <a href="{{ route('data.siswa') }}" class="block py-2">Data Siswa</a>
-                    <a href="{{ route('data.guru') }}" class="block py-2">Data Guru</a>
+                    <a href="{{ route('data.siswa') }}" class="block py-2 font-semibold text-blue-600">Data Siswa</a>
+                    <a href="{{ route('data.guru') }}" class="block py-2 font-semibold text-blue-600">Data Guru</a>
                 </div>
             </details>
 
-            <a href="{{ route('galeri') }}" class="block py-2 border-b border-gray-50 hover:text-blue-500">Galeri</a>
-            <a href="{{ route('kontak') }}" class="block py-2 hover:text-blue-500">Kontak</a>
+            <a href="{{ route('galeri') }}" class="block py-2 border-b border-gray-50 hover:text-blue-500 font-semibold text-blue-600">Galeri</a>
+            <a href="{{ route('kontak') }}" class="block py-2 hover:text-blue-500 font-semibold text-blue-600">Kontak</a>
+
+            @if(session('role') === 'super_admin')
+            <a href="{{ route('kelola.akun') }}" 
+               class="block py-2 border-t border-gray-50 text-blue-600 font-semibold">
+               Kelola Akun
+            </a>
+            @endif
         </div>
     </div>
 </nav>
