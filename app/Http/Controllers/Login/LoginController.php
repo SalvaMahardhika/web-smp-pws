@@ -11,13 +11,17 @@ use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
-    // halaman login
+    // =========================
+    // HALAMAN LOGIN
+    // =========================
     public function index()
     {
         return view('login.login');
     }
 
-    // proses login
+    // =========================
+    // PROSES LOGIN
+    // =========================
     public function login(Request $request)
     {
         $request->validate([
@@ -31,6 +35,12 @@ class LoginController extends Controller
 
             $user = $result['data'];
 
+            // 🔥 CEK STATUS (INI KUNCI UTAMA)
+            if ($user->status == 0) {
+                return back()->with('error', 'Akun anda nonaktif');
+            }
+
+            // SESSION LOGIN
             Session::put('login', true);
             Session::put('id_user', $user->id_user);
             Session::put('name', $user->name);
@@ -42,7 +52,9 @@ class LoginController extends Controller
         return back()->with('error', 'Email atau Password salah');
     }
 
-    // logout
+    // =========================
+    // LOGOUT
+    // =========================
     public function logout()
     {
         Session::flush();
@@ -50,7 +62,7 @@ class LoginController extends Controller
     }
 
     // =========================
-    // UPDATE PROFILE (INI FIX NOT FOUND)
+    // UPDATE PROFILE
     // =========================
     public function updateProfile(Request $request)
     {
@@ -75,4 +87,4 @@ class LoginController extends Controller
 
         return back()->with('success', 'Profile berhasil diupdate');
     }
-}
+}   

@@ -6,20 +6,23 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-    Schema::create('users', function (Blueprint $table) {
-        $table->id('id_user'); // sesuai DB kamu
-        $table->string('name', 100);
-        $table->string('email', 100)->unique();
-        $table->string('password');
-        $table->enum('role', ['admin', 'super_admin']);
-        $table->timestamps();
-    });
-    
+        Schema::create('users', function (Blueprint $table) {
+            $table->id('id_user'); // PRIMARY KEY CUSTOM
+            $table->string('name', 100);
+            $table->string('email', 100)->unique();
+            $table->string('password');
+
+            // ROLE
+            $table->enum('role', ['admin', 'super_admin'])->default('admin');
+
+            $table->boolean('status')->default(1); 
+            // 1 = aktif, 0 = nonaktif
+
+            $table->rememberToken();
+            $table->timestamps();
+        });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
@@ -29,7 +32,7 @@ return new class extends Migration
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
+            $table->unsignedBigInteger('user_id')->nullable()->index();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');
@@ -37,9 +40,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('users');
