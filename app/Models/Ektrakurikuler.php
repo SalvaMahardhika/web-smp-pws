@@ -15,7 +15,7 @@ class Ektrakurikuler extends Model
     {
         $namaGambar = self::handleUpload($request->file('gambar'));
         return self::create([
-            'id_user'   => session('id_user'), // Menggunakan ID dari session login kamu
+            'id_user'   => session('id_user'),
             'namaeskul' => $request->namaeskul,
             'pembina'   => $request->pembina,
             'deskripsi' => $request->deskripsi,

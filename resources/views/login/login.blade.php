@@ -68,11 +68,6 @@
                         class="bg-transparent w-full outline-none text-white placeholder-gray-300">
                 </div>
 
-                <div class="text-right mt-1">
-                    <a href="#" class="text-xs text-gray-300 hover:underline">
-                        Forgot password?
-                    </a>
-                </div>
             </div>
 
             <!-- BUTTON -->

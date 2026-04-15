@@ -13,15 +13,11 @@ class User extends Authenticatable
     //custom primary key
     protected $primaryKey = 'id_user';
 
-    //kalau bukan auto increment default (optional aman)
     public $incrementing = true;
 
     //tipe primary key
     protected $keyType = 'int';
 
-    /**
-     * Mass assignable
-     */
     protected $fillable = [
         'name',
         'email',
@@ -29,16 +25,10 @@ class User extends Authenticatable
         'role'
     ];
 
-    /**
-     * Hidden data
-     */
     protected $hidden = [
         'password',
     ];
 
-    /**
-     * Casting
-     */
     protected function casts(): array
     {
         return [

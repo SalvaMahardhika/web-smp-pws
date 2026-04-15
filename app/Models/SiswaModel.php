@@ -19,11 +19,7 @@ class SiswaModel extends Model
 
     public $timestamps = true;
 
-    /*
-    |------------------------------------------------------------------
-    | GET DATA GROUPING (FIX QUERY)
-    |------------------------------------------------------------------
-    */
+    //get data
     public static function getAllGrouped()
     {
         return [
@@ -33,11 +29,7 @@ class SiswaModel extends Model
         ];
     }
 
-    /*
-    |------------------------------------------------------------------
-    | STORE DATA (VALIDASI + ANTI DUPLIKAT)
-    |------------------------------------------------------------------
-    */
+    //add data
     public static function storeData($request)
     {
         // VALIDASI
@@ -78,11 +70,7 @@ class SiswaModel extends Model
         return ['status' => true];
     }
 
-    /*
-    |------------------------------------------------------------------
-    | UPDATE DATA (VALIDASI)
-    |------------------------------------------------------------------
-    */
+    //update
     public static function updateJumlah($id, $request)
     {
         if ($request->jumlah_laki === null || $request->jumlah_perempuan === null) {
@@ -113,11 +101,7 @@ class SiswaModel extends Model
         return ['status' => true];
     }
 
-    /*
-    |------------------------------------------------------------------
-    | DELETE DATA
-    |------------------------------------------------------------------
-    */
+    //delete
     public static function deleteData($id)
     {
         $siswa = self::findOrFail($id);

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash; // 🔥 WAJIB
+use Illuminate\Support\Facades\Hash; 
 
 class UserController extends Controller
 {
@@ -38,7 +38,6 @@ class UserController extends Controller
         return back()->with('success', 'Admin berhasil ditambahkan');
     }
 
-    // 🔥 FIX DI SINI
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -46,7 +45,6 @@ class UserController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
 
-        // 🔥 PASSWORD OPSIONAL + HASH
         if ($request->password) {
             $user->password = Hash::make($request->password);
         }

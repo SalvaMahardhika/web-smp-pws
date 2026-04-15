@@ -47,7 +47,7 @@
                 @for ($i = 0; $i < 5; $i++)
                 <div class="gallery-card relative overflow-hidden rounded-xl bg-gray-100 group cursor-pointer">
 
-                    <img src="{{ asset('img/imggaleri/g2.jpg') }}" 
+                    <img src="{{ asset('img/imggaleri/g2.jpeg') }}" 
                          class="max-h-60 rounded-xl object-contain">
 
                     <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition flex items-center justify-center">

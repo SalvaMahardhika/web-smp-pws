@@ -63,9 +63,7 @@
                 <p>
                     SMP Negeri 1 Purwosari adalah institusi pendidikan negeri yang berlokasi strategis di <strong>Jalan Raya Ngambon, Kab. Bojonegoro</strong>. Institusi ini resmi dibuka pada tahun <strong>1983</strong> dan terus bertransformasi mengikuti perkembangan zaman.
                 </p>
-                <p>
-                    Saat ini, di bawah kepemimpinan <strong>Bapak Sahir, S.Pd., M.M.</strong>, kami telah sepenuhnya mengadopsi <strong>Kurikulum Merdeka</strong> guna memberikan ruang kreativitas maksimal bagi para siswa.
-                </p>
+                
                 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 py-8">
                     <div class="text-center">

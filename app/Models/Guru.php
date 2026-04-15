@@ -15,17 +15,13 @@ class Guru extends Model
         'id_user'
     ];
 
-    // =========================
-    // GET ALL DATA
-    // =========================
+    //get data
     public static function getAllData()
     {
         return self::all();
     }
 
-    // =========================
-    // STORE DATA
-    // =========================
+    //add data
     public static function storeData($request)
     {
         return self::create([
@@ -35,9 +31,7 @@ class Guru extends Model
         ]);
     }
 
-    // =========================
-    // UPDATE DATA
-    // =========================
+    //update
     public static function updateData($id, $request)
     {
         $guru = self::findOrFail($id);
@@ -48,9 +42,7 @@ class Guru extends Model
         ]);
     }
 
-    // =========================
-    // DELETE DATA
-    // =========================
+    //delete
     public static function deleteData($id)
     {
         return self::destroy($id);

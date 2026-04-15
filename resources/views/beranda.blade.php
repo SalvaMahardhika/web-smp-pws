@@ -22,6 +22,7 @@
 
     <x-navbar />
 
+    {{-- HERO SECTION --}}
     <section class="relative min-h-[90vh] flex items-center px-6 md:px-20 text-white overflow-hidden">
         <img src="{{ asset('img/image1.png') }}" class="absolute inset-0 w-full h-full object-cover z-0 brightness-[0.45] scale-105">
         <div class="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/40 to-transparent z-0"></div>
@@ -43,6 +44,7 @@
         </div>
     </section>
 
+    {{-- SECTION BERITA --}}
     <section id="berita" class="py-28 px-6 md:px-10 bg-white">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-20">
@@ -58,6 +60,8 @@
             <div class="flex md:grid md:grid-cols-3 gap-10 overflow-x-auto md:overflow-visible pb-10 hide-scrollbar snap-x">
                 @foreach ($berita as $b)
                     <div class="min-w-[85%] md:min-w-0 bg-white rounded-[2.5rem] p-4 border border-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.05)] hover-lift snap-center relative group">
+                        
+                        {{-- Admin Controls --}}
                         @if(session('login') && in_array(session('role'), ['admin', 'super_admin']))
                         <div class="absolute top-8 right-8 flex gap-2 z-20 opacity-0 group-hover:opacity-100 transition">
                             <button onclick='openEditBerita(@json($b))' class="bg-white/90 backdrop-blur p-2 rounded-lg shadow-md text-blue-600 hover:scale-110 transition">✏️</button>
@@ -67,6 +71,7 @@
                             </form>
                         </div>
                         @endif
+
                         <div class="overflow-hidden rounded-[2rem] mb-6">
                             <img src="{{ asset('img/berita/' . $b->gambar) }}" class="h-64 w-full object-cover transform hover:scale-110 transition duration-700">
                         </div>
@@ -75,7 +80,14 @@
                                 <span class="w-2 h-2 rounded-full bg-blue-600"></span>
                                 <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">{{ \Carbon\Carbon::parse($b->tanggal)->format('d M Y') }}</span>
                             </div>
-                            <h3 class="font-bold text-2xl leading-snug text-slate-800 line-clamp-2 hover:text-blue-600 transition cursor-pointer">{{ $b->judul }}</h3>
+                            <h3 class="font-bold text-2xl leading-snug text-slate-800 line-clamp-2 hover:text-blue-600 transition cursor-pointer mb-3" onclick='openDetailBerita(@json($b))'>
+                                {{ $b->judul }}
+                            </h3>
+                            {{-- DESKRIPSI SINGKAT --}}
+                            <p class="text-slate-500 text-sm line-clamp-3 leading-relaxed mb-4 italic">
+                                {{ Str::limit($b->isi, 120) }}
+                            </p>
+                            <button onclick='openDetailBerita(@json($b))' class="text-blue-600 font-bold text-sm hover:underline">Baca Selengkapnya →</button>
                         </div>
                     </div>
                 @endforeach
@@ -83,6 +95,7 @@
         </div>
     </section>
 
+    {{-- SECTION FASILITAS --}}
     <section id="fasilitas" class="relative py-28 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 px-6 md:px-10 overflow-hidden">
         <div class="absolute top-0 left-0 w-64 h-64 bg-blue-600/20 blur-[100px] rounded-full -translate-x-1/2 -translate-y-1/2"></div>
         <div class="absolute bottom-0 right-0 w-96 h-96 bg-indigo-600/10 blur-[120px] rounded-full translate-x-1/3 translate-y-1/3"></div>
@@ -109,7 +122,6 @@
                     <div class="bg-white/5 backdrop-blur-md p-8 rounded-[2.5rem] border border-white/10 shadow-xl hover:border-blue-500/50 transition-all group">
                         <div class="flex justify-between items-start mb-4">
                             <span class="text-blue-400 font-bold tracking-tighter">#02</span>
-                            <span class="opacity-0 group-hover:opacity-100 transition text-blue-400">→</span>
                         </div>
                         <h3 class="text-xl font-bold text-white">Perpustakaan</h3>
                         <p class="text-slate-400 text-sm mt-1">E-Book System</p>
@@ -117,7 +129,6 @@
                     <div class="bg-white/5 backdrop-blur-md p-8 rounded-[2.5rem] border border-white/10 shadow-xl hover:border-blue-500/50 transition-all group">
                         <div class="flex justify-between items-start mb-4">
                             <span class="text-blue-400 font-bold tracking-tighter">#03</span>
-                            <span class="opacity-0 group-hover:opacity-100 transition text-blue-400">→</span>
                         </div>
                         <h3 class="text-xl font-bold text-white">Laboratorium</h3>
                         <p class="text-slate-400 text-sm mt-1">Sains Modern</p>
@@ -145,6 +156,7 @@
         </div>
     </section>
 
+    {{-- SECTION EKSTRAKURIKULER --}}
     <section id="ekstrakurikuler" class="py-28 px-6 md:px-10 bg-white">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-20">
@@ -160,10 +172,10 @@
                     <div class="min-w-[85%] md:min-w-[45%] lg:min-w-full group bg-white rounded-[3rem] overflow-hidden border border-slate-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] hover-lift snap-center relative">
                         @if(session('login') && in_array(session('role'), ['admin', 'super_admin']))
                         <div class="absolute top-6 right-6 flex gap-2 z-20 opacity-0 group-hover:opacity-100 transition">
-                            <button onclick='openEditEskul(@json($e))' class="bg-white/90 backdrop-blur p-2 rounded-lg shadow-md text-blue-600 hover:scale-110 transition">Edit</button>
+                            <button onclick='openEditEskul(@json($e))' class="bg-white/90 backdrop-blur p-2 rounded-lg shadow-md text-blue-600 hover:scale-110 transition px-3 py-1 text-xs font-bold">Edit</button>
                             <form action="{{ route('eskul.destroy', $e->id_ektrakurikuler) }}" method="POST">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="bg-white/90 backdrop-blur p-2 rounded-lg shadow-md text-red-600 hover:scale-110 transition" onclick="return confirm('Hapus eskul?')">Hapus</button>
+                                <button type="submit" class="bg-white/90 backdrop-blur p-2 rounded-lg shadow-md text-red-600 hover:scale-110 transition px-3 py-1 text-xs font-bold" onclick="return confirm('Hapus eskul?')">Hapus</button>
                             </form>
                         </div>
                         @endif
@@ -183,6 +195,22 @@
 
     <x-footer />
 
+    {{-- MODAL DETAIL BERITA (BARU) --}}
+    <div id="modalDetailBerita" class="fixed inset-0 z-[200] hidden modal-bg flex items-center justify-center p-4">
+        <div class="bg-white rounded-[2.5rem] max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+            <div class="relative">
+                <img id="detail_berita_gambar" src="" class="w-full h-80 object-cover rounded-t-[2.5rem]">
+                <button onclick="closeModal('modalDetailBerita')" class="absolute top-6 right-6 bg-white/20 backdrop-blur hover:bg-white/40 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold">✕</button>
+            </div>
+            <div class="p-10">
+                <span id="detail_berita_tanggal" class="text-blue-600 font-bold uppercase tracking-widest text-xs"></span>
+                <h3 id="detail_berita_judul" class="text-3xl font-black text-slate-900 mt-2 mb-6"></h3>
+                <div id="detail_berita_isi" class="text-slate-600 leading-relaxed space-y-4 text-lg"></div>
+            </div>
+        </div>
+    </div>
+
+    {{-- MODAL EDIT BERITA --}}
     <div id="modalEditBerita" class="fixed inset-0 z-[150] hidden modal-bg flex items-center justify-center p-4">
         <div class="bg-white rounded-[2.5rem] p-10 max-w-xl w-full shadow-2xl">
             <h3 class="text-2xl font-black mb-6">Edit Berita</h3>
@@ -200,6 +228,7 @@
         </div>
     </div>
 
+    {{-- MODAL TAMBAH BERITA --}}
     <div id="modalTambahBerita" class="fixed inset-0 z-[150] hidden modal-bg flex items-center justify-center p-4">
         <div class="bg-white rounded-[2.5rem] p-10 max-w-xl w-full shadow-2xl">
             <h3 class="text-2xl font-black mb-6">Tulis Berita Baru</h3>
@@ -217,6 +246,7 @@
         </div>
     </div>
 
+    {{-- MODAL TAMBAH ESKUL --}}
     <div id="modalTambahEskul" class="fixed inset-0 z-[150] hidden modal-bg flex items-center justify-center p-4">
         <div class="bg-white rounded-[2.5rem] p-10 max-w-xl w-full shadow-2xl">
             <h3 class="text-2xl font-black mb-6">Tambah Eskul</h3>
@@ -234,6 +264,7 @@
         </div>
     </div>
 
+    {{-- MODAL EDIT ESKUL --}}
     <div id="modalEditEskul" class="fixed inset-0 z-[150] hidden modal-bg flex items-center justify-center p-4">
         <div class="bg-white rounded-[2.5rem] p-10 max-w-xl w-full shadow-2xl">
             <h3 class="text-2xl font-black mb-6">Edit Ekstrakurikuler</h3>
@@ -252,6 +283,7 @@
     </div>
 
     <script>
+        // Fungsi Dasar Modal
         function openModal(id) { 
             const el = document.getElementById(id);
             if(el) {
@@ -269,6 +301,20 @@
             }
         }
 
+        // Fungsi Detail Berita (Baca Selengkapnya)
+        function openDetailBerita(data) {
+            document.getElementById('detail_berita_gambar').src = `/img/berita/${data.gambar}`;
+            document.getElementById('detail_berita_judul').innerText = data.judul;
+            document.getElementById('detail_berita_tanggal').innerText = data.tanggal;
+            
+            // Mengubah baris baru (\n) menjadi tag <p> agar rapi
+            const isiFormatted = data.isi.split('\n').map(p => `<p>${p}</p>`).join('');
+            document.getElementById('detail_berita_isi').innerHTML = isiFormatted;
+            
+            openModal('modalDetailBerita');
+        }
+
+        // Fungsi Edit Berita
         function openEditBerita(data) {
             document.getElementById('edit_berita_judul').value = data.judul;
             document.getElementById('edit_berita_tanggal').value = data.tanggal;
@@ -277,6 +323,7 @@
             openModal('modalEditBerita');
         }
 
+        // Fungsi Edit Eskul
         function openEditEskul(data) {
             document.getElementById('edit_eskul_nama').value = data.namaeskul;
             document.getElementById('edit_eskul_pembina').value = data.pembina;
