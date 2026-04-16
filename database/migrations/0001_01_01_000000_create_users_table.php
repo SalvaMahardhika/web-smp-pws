@@ -9,23 +9,23 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id('id_user'); // PRIMARY KEY CUSTOM
-            $table->string('name', 100);
-            $table->string('email', 100)->unique();
-            $table->string('password');
+            $table->id('id_user');
 
-            // ROLE
-            $table->enum('role', ['admin', 'super_admin'])->default('admin');
+            $table->string('name', 30);
+            $table->string('email', 30)->unique();
+            $table->string('password', 60);
 
-            $table->boolean('status')->default(1); 
-            // 1 = aktif, 0 = nonaktif
+            // ✅ FIX DI SINI
+            $table->enum('role', ['admin', 'super_admin', 'guru', 'siswa'])->default('admin');
+
+            $table->boolean('status')->default(1);
 
             $table->rememberToken();
             $table->timestamps();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
+            $table->string('email', 30)->primary();
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });
@@ -42,8 +42,8 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
     }
 };

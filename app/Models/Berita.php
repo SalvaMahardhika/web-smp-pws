@@ -9,9 +9,19 @@ class Berita extends Model
 {
     protected $table = 'berita';
     protected $primaryKey = 'id_berita';
-    protected $fillable = ['id_user', 'judul', 'isi', 'gambar', 'tanggal'];
 
-    // Simpan Berita Baru
+    protected $fillable = [
+        'id_user',
+        'judul',
+        'isi',
+        'gambar',
+        'tanggal',
+        'status'
+    ];
+
+    // =========================
+    // SIMPAN
+    // =========================
     public static function simpanBerita($request)
     {
         $namaGambar = self::handleUpload($request->file('gambar'));
@@ -22,10 +32,13 @@ class Berita extends Model
             'isi'     => $request->isi,
             'tanggal' => $request->tanggal,
             'gambar'  => $namaGambar,
+            'status'  => $request->status ?? 1 // 🔥 FIX: default ON
         ]);
     }
 
-    // Update Berita
+    // =========================
+    // UPDATE
+    // =========================
     public function updateBerita($request)
     {
         if ($request->hasFile('gambar')) {
@@ -37,20 +50,26 @@ class Berita extends Model
             'judul'   => $request->judul,
             'isi'     => $request->isi,
             'tanggal' => $request->tanggal,
-            'gambar'  => $this->gambar
+            'gambar'  => $this->gambar,
+            'status'  => $request->status ?? $this->status // 🔥 FIX
         ]);
     }
 
-    // Hapus Berita
+    // =========================
+    // DELETE
+    // =========================
     public function hapusBerita()
     {
         $this->hapusGambar();
         return $this->delete();
     }
 
+    // =========================
+    // UPLOAD
+    // =========================
     private static function handleUpload($file)
     {
-        $namaGambar = time() . '_' . $file->getClientOriginalName();
+        $namaGambar = uniqid() . '.' . $file->getClientOriginalExtension();
         $file->move(public_path('img/berita'), $namaGambar);
         return $namaGambar;
     }

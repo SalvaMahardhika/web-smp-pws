@@ -31,25 +31,23 @@ class LoginController extends Controller
 
         $result = AuthModel::login($request);
 
-        if ($result['status']) {
-
-            $user = $result['data'];
-
-            // 🔥 CEK STATUS (INI KUNCI UTAMA)
-            if ($user->status == 0) {
-                return back()->with('error', 'Akun anda nonaktif');
-            }
-
-            // SESSION LOGIN
-            Session::put('login', true);
-            Session::put('id_user', $user->id_user);
-            Session::put('name', $user->name);
-            Session::put('role', $user->role);
-
-            return redirect('/');
+        // ❌ LOGIN GAGAL
+        if (!$result['status']) {
+            return back()->with('error', $result['message'] ?? 'Email atau Password salah');
         }
 
-        return back()->with('error', 'Email atau Password salah');
+        $user = $result['data'];
+
+        // 🔥 TIDAK PERLU CEK STATUS DI SINI LAGI
+        // karena sudah dicek di AuthModel
+
+        // SESSION LOGIN
+        Session::put('login', true);
+        Session::put('id_user', $user->id_user);
+        Session::put('name', $user->name);
+        Session::put('role', $user->role);
+
+        return redirect('/');
     }
 
     // =========================
@@ -87,4 +85,4 @@ class LoginController extends Controller
 
         return back()->with('success', 'Profile berhasil diupdate');
     }
-}   
+}

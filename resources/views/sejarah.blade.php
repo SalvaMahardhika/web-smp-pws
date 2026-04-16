@@ -36,10 +36,12 @@
                     <p class="text-3xl font-bold text-blue-600">A</p>
                     <p class="text-xs text-blue-500 font-medium uppercase tracking-tighter">Akreditasi</p>
                 </div>
+                
                 <div class="bg-gray-50 p-4 rounded-2xl border border-gray-100 text-center flex-1">
-                    <p class="text-3xl font-bold text-gray-800">59</p>
+                    <p class="text-3xl font-bold text-gray-800">{{ \Illuminate\Support\Facades\DB::table('guru')->count() }}</p>
                     <p class="text-xs text-gray-500 font-medium uppercase tracking-tighter">Guru Ahli</p>
                 </div>
+                
             </div>
         </div>
 
@@ -67,7 +69,7 @@
                 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 py-8">
                     <div class="text-center">
-                        <p class="text-2xl font-bold text-gray-900">27</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ \Illuminate\Support\Facades\DB::table('siswa')->distinct()->count('kelas') }}</p>
                         <p class="text-sm text-gray-500">Ruang Kelas</p>
                     </div>
                     <div class="text-center">

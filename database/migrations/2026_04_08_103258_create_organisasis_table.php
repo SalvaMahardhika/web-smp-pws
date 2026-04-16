@@ -12,7 +12,10 @@ return new class extends Migration {
     {
         Schema::create('organisasis', function (Blueprint $table) {
             $table->id();
-            $table->string('foto');
+
+            // 🔥 DIUBAH DI SINI
+            $table->string('foto_organisasi', 20);
+
             $table->timestamps();
         });
     }

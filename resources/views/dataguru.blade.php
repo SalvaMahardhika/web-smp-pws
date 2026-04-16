@@ -104,10 +104,32 @@
                     <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Nama Lengkap</label>
                     <input type="text" name="nama_guru" class="w-full bg-slate-100 border-none p-4 rounded-3xl outline-none focus:ring-4 focus:ring-blue-100 font-bold text-lg" required placeholder="Contoh: Budi Santoso, S.Pd">
                 </div>
+
                 <div>
                     <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Mata Pelajaran</label>
-                    <input type="text" name="mata_pelajaran" class="w-full bg-slate-100 border-none p-4 rounded-3xl outline-none focus:ring-4 focus:ring-blue-100 font-bold text-lg" required placeholder="Contoh: Matematika">
+                    <div class="relative">
+                        <select name="mata_pelajaran" class="w-full bg-slate-100 border-2 border-transparent p-4 rounded-3xl outline-none focus:border-blue-200 focus:bg-blue-50/50 font-bold text-lg text-slate-800 cursor-pointer appearance-none pr-12 transition-all" required>
+                            <option value="" disabled selected>Pilih Mata Pelajaran</option>
+                            <option value="Matematika">Matematika</option>
+                            <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+                            <option value="Bahasa Inggris">Bahasa Inggris</option>
+                            <option value="Ilmu Pengetahuan Alam (IPA)">Ilmu Pengetahuan Alam (IPA)</option>
+                            <option value="Ilmu Pengetahuan Sosial (IPS)">Ilmu Pengetahuan Sosial (IPS)</option>
+                            <option value="Pendidikan Agama">Pendidikan Agama</option>
+                            <option value="Pendidikan Pancasila (PPKn)">Pendidikan Pancasila (PPKn)</option>
+                            <option value="Pendidikan Jasmani (PJOK)">Pendidikan Jasmani (PJOK)</option>
+                            <option value="Seni Budaya">Seni Budaya</option>
+                            <option value="TIK">TIK</option>
+                            <option value="Prakarya">Prakarya</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-5 text-slate-800">
+                            <svg class="fill-current h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="pt-4 flex flex-col gap-2 text-center">
                     <button type="submit" class="w-full py-5 bg-blue-600 text-white font-black rounded-3xl hover:bg-blue-700 shadow-xl transition-all uppercase tracking-widest text-center">Simpan Data</button>
                     <button type="button" onclick="closeModal('tambahModal')" class="w-full py-3 text-slate-400 font-bold text-center">Batalkan</button>
@@ -127,10 +149,32 @@
                     <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Nama Guru</label>
                     <input type="text" name="nama_guru" id="editNama" class="w-full bg-slate-100 border-none p-4 rounded-3xl outline-none focus:ring-4 focus:ring-blue-100 font-bold text-lg" required>
                 </div>
+
                 <div>
                     <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Mata Pelajaran</label>
-                    <input type="text" name="mata_pelajaran" id="editMapel" class="w-full bg-slate-100 border-none p-4 rounded-3xl outline-none focus:ring-4 focus:ring-blue-100 font-bold text-lg" required>
+                    <div class="relative">
+                        <select name="mata_pelajaran" id="editMapel" class="w-full bg-slate-100 border-2 border-transparent p-4 rounded-3xl outline-none focus:border-blue-200 focus:bg-blue-50/50 font-bold text-lg text-slate-800 cursor-pointer appearance-none pr-12 transition-all" required>
+                            <option value="" disabled>Pilih Mata Pelajaran</option>
+                            <option value="Matematika">Matematika</option>
+                            <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+                            <option value="Bahasa Inggris">Bahasa Inggris</option>
+                            <option value="Ilmu Pengetahuan Alam (IPA)">Ilmu Pengetahuan Alam (IPA)</option>
+                            <option value="Ilmu Pengetahuan Sosial (IPS)">Ilmu Pengetahuan Sosial (IPS)</option>
+                            <option value="Pendidikan Agama">Pendidikan Agama</option>
+                            <option value="Pendidikan Pancasila (PPKn)">Pendidikan Pancasila (PPKn)</option>
+                            <option value="Pendidikan Jasmani (PJOK)">Pendidikan Jasmani (PJOK)</option>
+                            <option value="Seni Budaya">Seni Budaya</option>
+                            <option value="TIK">TIK</option>
+                            <option value="Prakarya">Prakarya</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-5 text-slate-800">
+                            <svg class="fill-current h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="pt-4 flex flex-col gap-2 text-center">
                     <button type="submit" class="w-full py-5 bg-blue-600 text-white font-black rounded-3xl hover:bg-blue-700 shadow-xl transition-all uppercase tracking-widest text-center">Update Data</button>
                     <button type="button" onclick="closeModal('editModal')" class="w-full py-3 text-slate-400 font-bold text-center">Batal</button>
