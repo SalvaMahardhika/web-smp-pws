@@ -15,9 +15,7 @@ use App\Models\Guru;
 
 Route::middleware(['cek.status'])->group(function () {
 
-    // =======================
-    // BERANDA
-    // =======================
+    // beranda
     Route::get('/', function () {
 
         $ekstrakurikuler = Ekstrakurikuler::with('guru')->get();
@@ -35,24 +33,18 @@ Route::middleware(['cek.status'])->group(function () {
         return view('beranda', compact('ekstrakurikuler', 'berita', 'guru'));
     })->name('beranda');
 
-    // =======================
-    // HALAMAN STATIS
-    // =======================
+    // halaman statis
     Route::view('/sejarah', 'sejarah')->name('sejarah');
     Route::view('/visimisi', 'visimisi')->name('visimisi');
     Route::view('/kontak', 'kontak')->name('kontak');
 
-    // =======================
-    // GALERI (WAJIB CONTROLLER)
-    // =======================
+    // galeri
     Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri');
     Route::post('/galeri/store', [GaleriController::class, 'store']);
     Route::put('/galeri/update/{id}', [GaleriController::class, 'update']);
     Route::delete('/galeri/delete/{id}', [GaleriController::class, 'destroy']);
 
-    // =======================
-    // LOGIN & PROFILE
-    // =======================
+    // login & profile
     Route::get('/auth-smp-admin-2026', [LoginController::class, 'index'])->name('login.admin');
     Route::post('/auth-smp-admin-2026', [LoginController::class, 'login'])->name('login.process');
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -60,61 +52,60 @@ Route::middleware(['cek.status'])->group(function () {
 
     Route::view('/login', 'login')->name('login');
 
-    // =======================
-    // CRUD SISWA
-    // =======================
+    // siswa
     Route::get('/data-siswa', [SiswaController::class, 'index'])->name('data.siswa');
     Route::post('/siswa/store', [SiswaController::class, 'store'])->name('siswa.store');
     Route::post('/siswa/update/{id}', [SiswaController::class, 'update'])->name('siswa.update');
     Route::delete('/siswa/delete/{id}', [SiswaController::class, 'destroy'])->name('siswa.delete');
 
-    // =======================
-    // CRUD GURU
-    // =======================
+    // guru
     Route::get('/data-guru', [GuruController::class, 'index'])->name('data.guru');
     Route::post('/guru/store', [GuruController::class, 'store'])->name('guru.store');
     Route::post('/guru/update/{id}', [GuruController::class, 'update'])->name('guru.update');
     Route::delete('/guru/delete/{id}', [GuruController::class, 'destroy'])->name('guru.delete');
 
-    // =======================
-    // CRUD USER
-    // =======================
+    // user
     Route::get('/kelola-akun', [UserController::class, 'index'])->name('kelola.akun');
     Route::post('/kelola-akun', [UserController::class, 'store'])->name('user.store');
     Route::post('/kelola-akun/{id}', [UserController::class, 'update'])->name('user.update');
     Route::delete('/kelola-akun/{id}', [UserController::class, 'destroy'])->name('user.delete');
     Route::post('/update-status/{id}', [UserController::class, 'updateStatus'])->name('user.status');
 
-    // =======================
-    // CRUD BERITA
-    // =======================
+    // berita
     Route::post('/berita/store', [BeritaController::class, 'store'])->name('berita.store');
     Route::post('/berita/{id}/update', [BeritaController::class, 'update'])->name('berita.update');
     Route::delete('/berita/{id}', [BeritaController::class, 'destroy'])->name('berita.destroy');
     Route::post('/berita/{id}/toggle', [BeritaController::class, 'toggle'])->name('berita.toggle');
 
-    // =======================
-    // CRUD EKSTRAKURIKULER
-    // =======================
+    // ekstrakurikuler
     Route::post('/ekstrakurikuler/store', [EskulController::class, 'store'])->name('eskul.store');
     Route::post('/ekstrakurikuler/{id}/update', [EskulController::class, 'update'])->name('eskul.update');
     Route::delete('/ekstrakurikuler/{id}', [EskulController::class, 'destroy'])->name('eskul.destroy');
 
-    // =======================
-    // STRUKTUR ORGANISASI
-    // =======================
+    // struktur organisasi
     Route::get('/struktur-organisasi', [OrganisasiController::class, 'index'])->name('struktur');
     Route::post('/struktur/update', [OrganisasiController::class, 'update'])->name('struktur.update');
     Route::delete('/struktur/delete', [OrganisasiController::class, 'destroy'])->name('struktur.delete');
 
-    // =======================
-    // DETAIL
-    // =======================
+    // detail berita (filter status)
     Route::get('/berita/{id}', function ($id) {
+
+    if (session('login') && in_array(session('role'), ['admin', 'super_admin'])) {
         $berita = Berita::findOrFail($id);
-        return view('detail-berita', compact('berita'));
+    } else {
+        $berita = Berita::where('id_berita', $id)
+            ->where('status', 1)
+            ->first();
+
+        if (!$berita) {
+            return redirect('/'); // redirect ke dashboard
+        }
+    }
+
+    return view('detail-berita', compact('berita'));
     })->name('berita.detail');
 
+    // detail eskul
     Route::get('/ekstrakurikuler/{id}', function ($id) {
         $eskul = Ekstrakurikuler::with('guru')->findOrFail($id);
         return view('detail-eskul', compact('eskul'));

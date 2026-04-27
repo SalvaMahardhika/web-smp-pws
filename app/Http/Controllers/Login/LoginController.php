@@ -16,6 +16,11 @@ class LoginController extends Controller
     // =========================
     public function index()
     {
+        // 🔥 kalau sudah login, langsung redirect
+        if (session('login') && in_array(session('role'), ['admin', 'super_admin'])) {
+            return redirect('/'); // bisa diganti ke dashboard kalau ada
+        }
+
         return view('login.login');
     }
 
@@ -38,10 +43,9 @@ class LoginController extends Controller
 
         $user = $result['data'];
 
-        // 🔥 TIDAK PERLU CEK STATUS DI SINI LAGI
-        // karena sudah dicek di AuthModel
-
-        // SESSION LOGIN
+        // =========================
+        // SET SESSION LOGIN
+        // =========================
         Session::put('login', true);
         Session::put('id_user', $user->id_user);
         Session::put('name', $user->name);
