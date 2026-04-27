@@ -16,6 +16,8 @@ class Galeri extends Model
         'keterangan'
     ];
 
+    public $timestamps = true;
+
     private static $basePath = 'img/imggaleri/';
 
     // =========================
@@ -23,7 +25,6 @@ class Galeri extends Model
     // =========================
     public static function createAlbum($request)
     {
-        // 🔥 generate album otomatis
         $last = self::orderBy('id_media', 'desc')->first();
 
         if ($last) {
@@ -37,18 +38,18 @@ class Galeri extends Model
 
         $folderPath = public_path(self::$basePath . $albumName);
 
-        // 🔥 buat folder
+        // buat folder
         if (!File::exists($folderPath)) {
             File::makeDirectory($folderPath, 0777, true, true);
         }
 
-        // 🔥 upload file
+        // upload file
         foreach ($request->file('foto') as $file) {
             $namaFile = uniqid() . '.' . $file->getClientOriginalExtension();
             $file->move($folderPath, $namaFile);
         }
 
-        // 🔥 simpan DB
+        // simpan DB
         return self::create([
             'judul' => $request->judul,
             'album' => $albumName,

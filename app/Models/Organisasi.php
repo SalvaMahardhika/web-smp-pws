@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\File;
 class Organisasi extends Model
 {
     protected $table = 'organisasi';
-
     protected $primaryKey = 'id_organisasi';
 
     protected $fillable = [
@@ -18,7 +17,9 @@ class Organisasi extends Model
 
     public $timestamps = true;
 
+    // =========================
     // UPDATE / CREATE
+    // =========================
     public static function updateStruktur($request)
     {
         $request->validate([
@@ -27,13 +28,14 @@ class Organisasi extends Model
 
         $organisasi = self::first() ?? new self();
 
+        // 🔥 simpan user yang upload
         if (auth()->check()) {
             $organisasi->id_user = auth()->id();
         }
 
         if ($request->hasFile('foto_organisasi')) {
 
-            // hapus lama
+            // 🔥 hapus file lama
             if ($organisasi->foto_organisasi) {
                 $oldPath = public_path('img/org/' . $organisasi->foto_organisasi);
                 if (File::exists($oldPath)) {
@@ -41,7 +43,7 @@ class Organisasi extends Model
                 }
             }
 
-            // upload baru
+            // 🔥 upload file baru
             $file = $request->file('foto_organisasi');
             $nama_file = uniqid() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('img/org'), $nama_file);
@@ -55,7 +57,9 @@ class Organisasi extends Model
         return false;
     }
 
+    // =========================
     // DELETE
+    // =========================
     public static function hapusStruktur()
     {
         $organisasi = self::first();
