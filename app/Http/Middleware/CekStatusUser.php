@@ -13,17 +13,18 @@ class CekStatusUser
     {
         if (session('login')) {
 
-            $user = User::where('id_user', session('id_user'))->first();
+            $user = User::find(session('id_user'));
 
-            // 🔥 kalau status OFF
-            if ($user && $user->status == 0) {
-
-                // logout paksa
+            // user tidak ada
+            if (!$user) {
                 session()->flush();
+                return redirect('/')->with('error', 'Akun tidak ditemukan');
+            }
 
-                // 🔥 redirect ke beranda user
-                return redirect('/')
-                    ->with('error', 'Akun Anda dinonaktifkan!');
+            // status nonaktif
+            if ($user->status == 0) {
+                session()->flush();
+                return redirect('/')->with('error', 'Akun dinonaktifkan');
             }
         }
 

@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash; 
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    // =========================
+    // INDEX
+    // =========================
     public function index()
     {
         if (session('role') !== 'super_admin') {
@@ -19,6 +22,9 @@ class UserController extends Controller
         return view('kelolaakun', compact('users'));
     }
 
+    // =========================
+    // STORE
+    // =========================
     public function store(Request $request)
     {
         $request->validate([
@@ -30,7 +36,7 @@ class UserController extends Controller
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password, // tetap (sudah auto hash di model)
+            'password' => $request->password, // auto hash dari model
             'role' => 'admin',
             'status' => 1
         ]);
@@ -38,6 +44,9 @@ class UserController extends Controller
         return back()->with('success', 'Admin berhasil ditambahkan');
     }
 
+    // =========================
+    // UPDATE
+    // =========================
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -54,15 +63,25 @@ class UserController extends Controller
         return back()->with('success', 'Admin berhasil diupdate');
     }
 
+    // =========================
+    // DELETE
+    // =========================
     public function destroy($id)
     {
-        $user = User::findOrFail($id);
+        $result = User::deleteUser($id);
 
-        $user->delete();
+        // kalau user yang login ikut dihapus
+        if ($result['logout']) {
+            session()->flush();
+            return redirect('/')->with('success', 'Akun Anda telah dihapus');
+        }
 
         return back()->with('success', 'Admin berhasil dihapus');
     }
 
+    // =========================
+    // UPDATE STATUS
+    // =========================
     public function updateStatus(Request $request, $id)
     {
         $user = User::findOrFail($id);

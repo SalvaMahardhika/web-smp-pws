@@ -15,15 +15,20 @@ class Guru extends Model
         'id_user'
     ];
 
-    //get data
+    // get data
     public static function getAllData()
     {
         return self::all();
     }
 
-    //add data
+    // add data
     public static function storeData($request)
     {
+        $request->validate([
+            'nama_guru' => 'required',
+            'mata_pelajaran' => 'required'
+        ]);
+
         return self::create([
             'nama_guru' => $request->nama_guru,
             'mata_pelajaran' => $request->mata_pelajaran,
@@ -31,9 +36,14 @@ class Guru extends Model
         ]);
     }
 
-    //update
+    // update
     public static function updateData($id, $request)
     {
+        $request->validate([
+            'nama_guru' => 'required',
+            'mata_pelajaran' => 'required'
+        ]);
+
         $guru = self::findOrFail($id);
 
         return $guru->update([
@@ -42,7 +52,7 @@ class Guru extends Model
         ]);
     }
 
-    //delete
+    // delete
     public static function deleteData($id)
     {
         return self::destroy($id);

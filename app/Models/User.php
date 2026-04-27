@@ -10,29 +10,55 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    //custom primary key
+    // =========================
+    // PRIMARY KEY
+    // =========================
     protected $primaryKey = 'id_user';
-
     public $incrementing = true;
-
-    //tipe primary key
     protected $keyType = 'int';
 
+    // =========================
+    // FILLABLE
+    // =========================
     protected $fillable = [
         'name',
         'email',
         'password',
-        'role'
+        'role',
+        'status'
     ];
 
+    // =========================
+    // HIDDEN
+    // =========================
     protected $hidden = [
         'password',
     ];
 
+    // =========================
+    // CASTS
+    // =========================
     protected function casts(): array
     {
         return [
-            'password' => 'hashed', // otomatis bcrypt
+            'password' => 'hashed',
+        ];
+    }
+
+    // =========================
+    // DELETE USER + CEK LOGOUT
+    // =========================
+    public static function deleteUser($id)
+    {
+        $user = self::findOrFail($id);
+
+        // cek apakah user yg dihapus adalah yg sedang login
+        $isCurrentUser = session('id_user') == $user->id_user;
+
+        $user->delete();
+
+        return [
+            'logout' => $isCurrentUser
         ];
     }
 }
