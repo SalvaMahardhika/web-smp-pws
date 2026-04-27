@@ -68,7 +68,7 @@
                         <form action="{{ route('struktur.update') }}" method="POST" enctype="multipart/form-data"
                             class="flex items-center gap-2">
                             @csrf
-                            <input type="file" name="foto" required
+                            <input type="file" name="foto_organisasi" required
                                 class="text-[10px] text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-bold file:bg-slate-50 file:text-slate-600 hover:file:bg-slate-100 transition-all cursor-pointer">
                             <button type="submit"
                                 class="bg-slate-900 text-white px-5 py-2 rounded-full text-[10px] font-bold hover:bg-blue-600 transition-all uppercase tracking-wider">Upload</button>
@@ -77,7 +77,7 @@
                         <form action="{{ route('struktur.update') }}" method="POST" enctype="multipart/form-data" id="editForm"
                             class="inline">
                             @csrf
-                            <input type="file" name="foto" id="editInput" class="hidden"
+                            <input type="file" name="foto_organisasi" id="editInput" class="hidden"
                                 onchange="document.getElementById('editForm').submit()">
                             <button type="button" onclick="document.getElementById('editInput').click()"
                                 class="p-2.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all"
@@ -108,8 +108,8 @@
 
         <div class="bg-white border border-slate-50 rounded-[3rem] luxury-shadow overflow-hidden">
             <div class="p-4 md:p-12 flex justify-center items-center min-h-[450px]">
-                @if($data && $data->foto)
-                    <img src="{{ asset('img/org/' . $data->foto) }}?t={{ time() }}" alt="Bagan Struktur"
+                @if($data && $data->foto_organisasi)
+                    <img src="{{ asset('img/org/' . $data->foto_organisasi) }}?t={{ time() }}" alt="Bagan Struktur"
                         class="w-full h-auto object-contain rounded-2xl shadow-sm">
                 @else
                     <div class="text-center">

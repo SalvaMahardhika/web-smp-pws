@@ -44,56 +44,112 @@
         </div>
     </section>
 
-    {{-- SECTION BERITA --}}
-    <section id="berita" class="py-28 px-6 md:px-10 bg-white">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-20">
-                <h2 class="text-4xl md:text-5xl font-bold">Kabar Terkini</h2>
-                <p class="text-slate-400 mt-4 max-w-xl mx-auto text-lg leading-relaxed">
-                    Ikuti terus perkembangan warta dan aktivitas terbaru di lingkungan sekolah kami.
-                </p>
-                @if(session('login') && in_array(session('role'), ['admin', 'super_admin']))
-                    <button onclick="openModal('modalTambahBerita')" class="mt-6 bg-slate-900 text-white px-8 py-3 rounded-full font-bold hover:bg-blue-600 transition shadow-lg">+ Tulis Berita</button>
-                @endif
-            </div>
+    {{-- ======================= BERITA ======================= --}}
+<section id="berita" class="py-28 px-6 md:px-10 bg-slate-50">
+    <div class="max-w-7xl mx-auto">
 
-            <div class="flex md:grid md:grid-cols-3 gap-10 overflow-x-auto md:overflow-visible pb-10 hide-scrollbar snap-x">
-                @foreach ($berita as $b)
-                    <div class="min-w-[85%] md:min-w-0 bg-white rounded-[2.5rem] p-4 border border-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.05)] hover-lift snap-center relative group">
-                        
-                        {{-- Admin Controls --}}
-                        @if(session('login') && in_array(session('role'), ['admin', 'super_admin']))
-                        <div class="absolute top-8 right-8 flex gap-2 z-20 opacity-0 group-hover:opacity-100 transition">
-                            <button onclick='openEditBerita(@json($b))' class="bg-white/90 backdrop-blur p-2 rounded-lg shadow-md text-blue-600 hover:scale-110 transition">✏️</button>
-                            <form action="{{ route('berita.destroy', $b->id_berita) }}" method="POST">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="bg-white/90 backdrop-blur p-2 rounded-lg shadow-md text-red-600 hover:scale-110 transition" onclick="return confirm('Hapus berita?')">🗑️</button>
-                            </form>
-                        </div>
-                        @endif
+        <div class="text-center mb-20">
+            <h2 class="text-4xl md:text-5xl font-bold">Berita Terbaru</h2>
+            <p class="text-slate-400 mt-4 max-w-xl mx-auto text-lg leading-relaxed">
+                Informasi dan kegiatan terbaru dari sekolah kami.
+            </p>
 
-                        <div class="overflow-hidden rounded-[2rem] mb-6">
-                            <img src="{{ asset('img/berita/' . $b->gambar) }}" class="h-64 w-full object-cover transform hover:scale-110 transition duration-700">
-                        </div>
-                        <div class="px-4 pb-4">
-                            <div class="flex items-center gap-3 mb-4">
-                                <span class="w-2 h-2 rounded-full bg-blue-600"></span>
-                                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">{{ \Carbon\Carbon::parse($b->tanggal)->format('d M Y') }}</span>
-                            </div>
-                            <h3 class="font-bold text-2xl leading-snug text-slate-800 line-clamp-2 hover:text-blue-600 transition cursor-pointer mb-3" onclick='openDetailBerita(@json($b))'>
-                                {{ $b->judul }}
-                            </h3>
-                            {{-- DESKRIPSI SINGKAT --}}
-                            <p class="text-slate-500 text-sm line-clamp-3 leading-relaxed mb-4 italic">
-                                {{ Str::limit($b->isi, 120) }}
-                            </p>
-                            <button onclick='openDetailBerita(@json($b))' class="text-blue-600 font-bold text-sm hover:underline">Baca Selengkapnya →</button>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
+            @if(session('login') && in_array(session('role'), ['admin', 'super_admin']))
+                <button onclick="openModal('modalTambahBerita')" 
+                    class="mt-6 bg-slate-900 text-white px-8 py-3 rounded-full font-bold shadow-lg">
+                    + Tambah Berita
+                </button>
+            @endif
         </div>
-    </section>
+
+        <div class="grid md:grid-cols-3 gap-10">
+
+            @forelse ($berita as $b)
+
+            <div class="bg-white rounded-[2rem] shadow-lg overflow-hidden group hover-lift relative">
+
+                {{-- 🔥 BADGE STATUS (ADMIN ONLY) --}}
+                @if(session('login') && in_array(session('role'), ['admin', 'super_admin']))
+                    @if($b->status == 0)
+                        <span class="absolute top-4 left-4 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full z-20">
+                            OFF
+                        </span>
+                    @endif
+                @endif
+
+                {{-- 🔥 ACTION BUTTON ADMIN --}}
+                @if(session('login') && in_array(session('role'), ['admin', 'super_admin']))
+                    <div class="absolute top-4 right-4 flex items-center gap-2 z-20 opacity-0 group-hover:opacity-100 transition">
+
+                 {{-- TOGGLE --}}
+                    <form action="{{ route('berita.toggle', $b->id_berita) }}" method="POST">
+                @csrf
+                <input type="checkbox"
+                onchange="this.form.submit()"
+                  {{$b->status ? 'checked' : '' }}>
+                </form>
+
+                {{-- EDIT --}}
+                <button onclick='openEditBerita(@json($b))'
+                class="bg-white/90 backdrop-blur px-3 py-1 text-xs font-bold rounded shadow text-blue-600">
+        Edit
+    </button>
+
+                 {{-- DELETE --}}
+                <form action="{{ route('berita.destroy', $b->id_berita) }}" method="POST">
+                @csrf @method('DELETE')
+                <button type="submit"
+                onclick="return confirm('Hapus berita?')"
+                class="bg-white/90 backdrop-blur px-3 py-1 text-xs font-bold rounded shadow text-red-600">
+            Hapus
+            </button>
+    </form>
+
+</div>
+@endif
+
+                {{-- GAMBAR --}}
+                <div class="h-56 overflow-hidden">
+                    <img src="{{ asset('img/berita/' . $b->gambar) }}"
+                         class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                </div>
+
+                <div class="p-6">
+
+                    {{-- TANGGAL --}}
+                    <p class="text-xs text-blue-600 font-bold mb-2">
+                        {{ \Carbon\Carbon::parse($b->tanggal)->format('d M Y') }}
+                    </p>
+
+                    {{-- JUDUL --}}
+                    <h3 class="text-lg font-bold text-slate-800 mb-3 line-clamp-2">
+                        {{ $b->judul }}
+                    </h3>
+
+                    {{-- DESKRIPSI --}}
+                    <p class="text-sm text-slate-500 mb-4 line-clamp-3">
+                        {{ \Illuminate\Support\Str::limit($b->isi, 100) }}
+                    </p>
+
+                    {{-- LINK DETAIL --}}
+                    <a href="{{ route('berita.detail', $b->id_berita) }}"
+                       class="text-blue-600 font-bold text-sm hover:underline">
+                        Baca Selengkapnya →
+                    </a>
+
+                </div>
+            </div>
+
+            @empty
+                <p class="text-center text-slate-400 col-span-3">
+                    Belum ada berita tersedia.
+                </p>
+            @endforelse
+
+        </div>
+
+    </div>
+</section>
 
     {{-- SECTION FASILITAS --}}
     <section id="fasilitas" class="relative py-28 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 px-6 md:px-10 overflow-hidden">
@@ -168,12 +224,12 @@
             </div>
 
             <div class="flex lg:grid lg:grid-cols-3 gap-10 overflow-x-auto hide-scrollbar snap-x snap-mandatory pb-12">
-                @foreach ($ektrakurikuler as $e)
+                @foreach ($ekstrakurikuler as $e)
                     <div class="min-w-[85%] md:min-w-[45%] lg:min-w-full group bg-white rounded-[3rem] overflow-hidden border border-slate-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] hover-lift snap-center relative">
                         @if(session('login') && in_array(session('role'), ['admin', 'super_admin']))
                         <div class="absolute top-6 right-6 flex gap-2 z-20 opacity-0 group-hover:opacity-100 transition">
                             <button onclick='openEditEskul(@json($e))' class="bg-white/90 backdrop-blur p-2 rounded-lg shadow-md text-blue-600 hover:scale-110 transition px-3 py-1 text-xs font-bold">Edit</button>
-                            <form action="{{ route('eskul.destroy', $e->id_ektrakurikuler) }}" method="POST">
+                            <form action="{{ route('eskul.destroy', $e->id_eskul) }}" method="POST">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="bg-white/90 backdrop-blur p-2 rounded-lg shadow-md text-red-600 hover:scale-110 transition px-3 py-1 text-xs font-bold" onclick="return confirm('Hapus eskul?')">Hapus</button>
                             </form>
@@ -181,11 +237,12 @@
                         @endif
                         <div class="h-72 overflow-hidden relative">
                             <img src="{{ asset('img/eskul/' . $e->gambar) }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                            <div class="absolute top-6 left-6 bg-white/90 backdrop-blur-md text-blue-600 text-[10px] font-black px-5 py-2 rounded-full uppercase tracking-widest">Pembina: {{ $e->pembina }}</div>
+                            <div class="absolute top-6 left-6 bg-white/90 backdrop-blur-md text-blue-600 text-[10px] font-black px-5 py-2 rounded-full uppercase tracking-widest">Pembina: {{ $e->guru->nama_guru ?? '-' }}</div>
                         </div>
                         <div class="p-10">
-                            <h3 class="text-2xl font-bold text-slate-800 mb-4">{{ $e->namaeskul }}</h3>
+                            <h3 class="text-2xl font-bold text-slate-800 mb-4">{{ $e->nama_eskul }}</h3>
                             <p class="text-slate-500 leading-relaxed text-sm italic">"{{ $e->deskripsi }}"</p>
+                            <a href="{{ route('eskul.detail', $e->id_eskul) }}"class="text-blue-600 font-bold text-sm hover:underline mt-3 inline-block">Baca Selengkapnya →</a>
                         </div>
                     </div>
                 @endforeach
@@ -252,8 +309,13 @@
             <h3 class="text-2xl font-black mb-6">Tambah Eskul</h3>
             <form action="{{ route('eskul.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                 @csrf
-                <input type="text" name="namaeskul" placeholder="Nama Eskul" class="w-full p-4 bg-slate-50 rounded-2xl border outline-none focus:border-blue-500" required>
-                <input type="text" name="pembina" placeholder="Nama Pembina" class="w-full p-4 bg-slate-50 rounded-2xl border outline-none focus:border-blue-500" required>
+                <input type="text" name="nama_eskul" placeholder="Nama Eskul" class="w-full p-4 bg-slate-50 rounded-2xl border outline-none focus:border-blue-500" required>
+                <select id="edit_eskul_guru" name="id_guru" class="w-full p-4 bg-slate-50 rounded-2xl border outline-none focus:border-blue-500" required>
+    <option value="">Pilih Pembina</option>
+    @foreach ($guru as $g)
+        <option value="{{ $g->id_guru }}">{{ $g->nama_guru }}</option>
+    @endforeach
+</select>
                 <textarea name="deskripsi" placeholder="Deskripsi Singkat" rows="3" class="w-full p-4 bg-slate-50 rounded-2xl border outline-none focus:border-blue-500" required></textarea>
                 <input type="file" name="gambar" class="w-full text-sm" required>
                 <div class="flex gap-3 pt-4">
@@ -270,8 +332,13 @@
             <h3 class="text-2xl font-black mb-6">Edit Ekstrakurikuler</h3>
             <form id="formEditEskul" action="" method="POST" enctype="multipart/form-data" class="space-y-4">
                 @csrf
-                <input type="text" id="edit_eskul_nama" name="namaeskul" class="w-full p-4 bg-slate-50 rounded-2xl border outline-none focus:border-blue-500" required>
-                <input type="text" id="edit_eskul_pembina" name="pembina" class="w-full p-4 bg-slate-50 rounded-2xl border outline-none focus:border-blue-500" required>
+                <input type="text" id="edit_eskul_nama" name="nama_eskul" class="w-full p-4 bg-slate-50 rounded-2xl border outline-none focus:border-blue-500" required>
+                <select name="id_guru" class="w-full p-4 bg-slate-50 rounded-2xl border outline-none focus:border-blue-500" required>
+    <option value="">Pilih Pembina</option>
+    @foreach ($guru as $g)
+        <option value="{{ $g->id_guru }}">{{ $g->nama_guru }}</option>
+    @endforeach
+</select>
                 <textarea id="edit_eskul_desk" name="deskripsi" rows="3" class="w-full p-4 bg-slate-50 rounded-2xl border outline-none focus:border-blue-500" required></textarea>
                 <input type="file" name="gambar" class="w-full text-sm">
                 <div class="flex gap-3 pt-4">
@@ -325,10 +392,10 @@
 
         // Fungsi Edit Eskul
         function openEditEskul(data) {
-            document.getElementById('edit_eskul_nama').value = data.namaeskul;
-            document.getElementById('edit_eskul_pembina').value = data.pembina;
+            document.getElementById('edit_eskul_nama').value = data.nama_eskul;
+            document.getElementById('edit_eskul_guru').value = data.id_guru;
             document.getElementById('edit_eskul_desk').value = data.deskripsi;
-            document.getElementById('formEditEskul').action = `/ekstrakurikuler/${data.id_ektrakurikuler}/update`;
+            document.getElementById('formEditEskul').action = `/ekstrakurikuler/${data.id_eskul}/update`;
             openModal('modalEditEskul');
         }
     </script>
