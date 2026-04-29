@@ -137,35 +137,67 @@
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-xl font-bold text-gray-800">Edit Profile</h3>
                 <button onclick="closeProfileModal()" class="text-gray-400 hover:text-gray-600 transition">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
                 </button>
             </div>
 
             <form action="{{ route('profile.update') }}" method="POST">
                 @csrf
                 <div class="space-y-4">
+
+                    <!-- NAMA (TETAP) -->
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Lengkap</label>
                         <input type="text" name="name" value="{{ session('name') }}" required
                             class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition">
                     </div>
+
+                    <!-- 🔥 TAMBAHAN EMAIL -->
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">Password Baru</label>
-                        <input type="password" name="password" placeholder="Kosongkan jika tidak ingin ganti"
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Email</label>
+                        <input type="email" name="email" value="{{ session('email') }}"
                             class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition">
                     </div>
+
+                    <!-- 🔥 PASSWORD + TOGGLE -->
+                    <div class="relative">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Password Baru</label>
+
+                        <input 
+                            type="password" 
+                            id="passwordInput"
+                            name="password" 
+                            placeholder="Kosongkan jika tidak ingin ganti"
+                            class="w-full px-4 py-2 pr-10 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                        >
+
+                        <span onclick="togglePassword()" 
+                            style="position:absolute; right:10px; top:38px; cursor:pointer;">
+                            👁️
+                        </span>
+                    </div>
+
                 </div>
 
                 <div class="mt-8 flex gap-3">
                     <button type="button" onclick="closeProfileModal()" 
-                        class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 rounded-xl hover:bg-gray-50 font-medium transition">Batal</button>
+                        class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 rounded-xl hover:bg-gray-50 font-medium transition">
+                        Batal
+                    </button>
+
                     <button type="submit" 
-                        class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-medium shadow-lg transition">Simpan</button>
+                        class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-medium shadow-lg transition">
+                        Simpan
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+
 
 <script>
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
@@ -212,6 +244,7 @@
 
     // Global Click Listener (untuk tutup menu saat klik di luar)
     window.addEventListener('click', function(e) {
+        
         // Tutup Dropdown Desktop
         if (profileMenuDesktop && !profileMenuDesktop.contains(e.target)) {
             profileMenuDesktop.classList.add('hidden');
@@ -228,5 +261,18 @@
         if (e.target === profileModal) {
             closeProfileModal();
         }
+
+        
     });
+    function togglePassword() {
+    const input = document.getElementById("passwordInput");
+
+    if (!input) return;
+
+    if (input.type === "password") {
+        input.type = "text";
+    } else {
+        input.type = "password";
+    }
+}
 </script>

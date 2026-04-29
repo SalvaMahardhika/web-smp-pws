@@ -133,8 +133,20 @@
 
             <input type="text" name="name" id="editName" class="w-full border p-2 rounded mb-3">
             <input type="email" name="email" id="editEmail" class="w-full border p-2 rounded mb-3">
-            <input type="password" name="password" placeholder="Password (opsional)" class="w-full border p-2 rounded mb-4">
+            <div class="relative mb-4">
+    <input 
+        type="password" 
+        id="editPassword"
+        name="password" 
+        placeholder="Password (opsional)" 
+        class="w-full border p-2 pr-10 rounded"
+    >
 
+    <span onclick="togglePasswordEdit(this)" 
+        class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer">
+        👁️
+    </span>
+</div>
             <div class="flex justify-end gap-2">
                 <button type="button" onclick="closeModal('editModal')" class="bg-red-400 text-white px-4 py-1 rounded">
                     Keluar
@@ -184,7 +196,19 @@ function toggleStatus(el, id){
         body: JSON.stringify({ status: status })
     });
 }
+function togglePasswordEdit(el){
+    const input = document.getElementById("editPassword");
+
+    if(input.type === "password"){
+        input.type = "text";
+        el.innerText = "🙈";
+    } else {
+        input.type = "password";
+        el.innerText = "👁️";
+    }
+}
 </script>
+
 
 </body>
 </html>

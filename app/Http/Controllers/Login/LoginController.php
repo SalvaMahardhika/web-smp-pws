@@ -5,87 +5,71 @@ namespace App\Http\Controllers\Login;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Login\AuthModel;
-use App\Models\User;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
-    // =========================
-    // HALAMAN LOGIN
-    // =========================
+    // halaman login
     public function index()
     {
-        // 🔥 kalau sudah login, langsung redirect
         if (session('login') && in_array(session('role'), ['admin', 'super_admin'])) {
-            return redirect('/'); // bisa diganti ke dashboard kalau ada
+            return redirect('/');
         }
 
         return view('login.login');
     }
 
-    // =========================
-    // PROSES LOGIN
-    // =========================
+    // proses login
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required',
+            'email' => 'required|email',
             'password' => 'required'
         ]);
 
         $result = AuthModel::login($request);
 
-        // ❌ LOGIN GAGAL
         if (!$result['status']) {
-            return back()->with('error', $result['message'] ?? 'Email atau Password salah');
+            return back()->with('error', $result['message']);
         }
 
         $user = $result['data'];
 
-        // =========================
-        // SET SESSION LOGIN
-        // =========================
         Session::put('login', true);
         Session::put('id_user', $user->id_user);
         Session::put('name', $user->name);
+        Session::put('email', $user->email);
         Session::put('role', $user->role);
 
         return redirect('/');
     }
 
-    // =========================
-    // LOGOUT
-    // =========================
+    // logout
     public function logout()
     {
         Session::flush();
         return redirect('/');
     }
 
-    // =========================
-    // UPDATE PROFILE
-    // =========================
+    // update profile
     public function updateProfile(Request $request)
     {
-        $user = User::find(session('id_user'));
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email'
+        ]);
 
-        if (!$user) {
-            return back()->with('error', 'User tidak ditemukan');
+        $result = AuthModel::updateProfile($request);
+
+        if (!$result['status']) {
+            return back()->with('error', $result['message']);
         }
 
-        // update nama
-        $user->name = $request->name;
+        $user = $result['data'];
 
-        // update password jika diisi
-        if ($request->password) {
-            $user->password = Hash::make($request->password);
-        }
-
-        $user->save();
-
-        // update session
+        // update session biar navbar langsung berubah
         Session::put('name', $user->name);
+        Session::put('email', $user->email);
 
         return back()->with('success', 'Profile berhasil diupdate');
     }
