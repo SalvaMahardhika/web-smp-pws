@@ -120,7 +120,7 @@
                             <option value="Pendidikan Pancasila (PPKn)">Pendidikan Pancasila (PPKn)</option>
                             <option value="Pendidikan Jasmani (PJOK)">Pendidikan Jasmani (PJOK)</option>
                             <option value="Seni Budaya">Seni Budaya</option>
-                            <option value="Teknologi Informasi dan Komunikasi(TIK)">TIK</option>
+                            <option value="Teknologi Informasi dan Komunikasi (TIK)">TIK</option>
                             <option value="Prakarya">Prakarya</option>
                         </select>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-5 text-slate-800">
@@ -165,7 +165,7 @@
                             <option value="Pendidikan Pancasila (PPKn)">Pendidikan Pancasila (PPKn)</option>
                             <option value="Pendidikan Jasmani (PJOK)">Pendidikan Jasmani (PJOK)</option>
                             <option value="Seni Budaya">Seni Budaya</option>
-                            <option value="TIK">TIK</option>
+                            <option value="Teknologi Informasi dan Komunikasi (TIK)">TIK</option>
                             <option value="Prakarya">Prakarya</option>
                         </select>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-5 text-slate-800">
