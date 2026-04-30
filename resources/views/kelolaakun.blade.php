@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beranda - SMPN 1 Purwosari</title>
+    <title>Kelola Akun - SMPN 1 Purwosari</title>
+    <link rel="icon" href="{{ asset('img/logo-removebg.png') }}">
     <script src="https://cdn.tailwindcss.com"></script> 
 </head>
 
@@ -59,8 +60,11 @@
                             <div class="w-11 h-6 bg-gray-300 rounded-full peer 
                                         peer-checked:bg-blue-500 
                                         relative transition">
-                                <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full 
-                                            transition peer-checked:translate-x-5"></div>
+                                <div class="absolute top-0.5 left-[2px] 
+                                        w-5 h-5 bg-white rounded-full 
+                                        transition-all duration-300 
+                                        peer-checked:translate-x-5">
+                                                                </div>
                             </div>
                         </label>
                     </td>
