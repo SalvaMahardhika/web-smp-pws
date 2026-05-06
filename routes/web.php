@@ -43,6 +43,9 @@ Route::middleware(['cek.status'])->group(function () {
     Route::post('/galeri/store', [GaleriController::class, 'store']);
     Route::put('/galeri/update/{id}', [GaleriController::class, 'update']);
     Route::delete('/galeri/delete/{id}', [GaleriController::class, 'destroy']);
+    Route::delete('/galeri/delete-foto', [GaleriController::class, 'deleteFoto']);
+    Route::post('/galeri/tambah-foto/{album}', [GaleriController::class, 'tambahFoto']);
+    
 
     // login & profile
     Route::get('/auth-smp-admin-2026', [LoginController::class, 'index'])->name('login.admin');
