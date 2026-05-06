@@ -242,7 +242,7 @@
                         </div>
                         <div class="p-10">
                             <h3 class="text-2xl font-bold text-slate-800 mb-4">{{ $e->nama_eskul }}</h3>
-                            <p class="text-slate-500 leading-relaxed text-sm italic">"{{ $e->deskripsi }}"</p>
+                            <p class="text-slate-500 leading-relaxed text-sm italic line-clamp-3">"{{ $e->deskripsi }}"</p>
                             <a href="{{ route('eskul.detail', $e->id_eskul) }}"class="text-blue-600 font-bold text-sm hover:underline mt-3 inline-block">Baca Selengkapnya →</a>
                         </div>
                     </div>
