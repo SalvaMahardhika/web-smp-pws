@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthModel
 {
-    // login logic
+    // Logika Login
     public static function login($request)
     {
         $user = User::where('email', $request->email)->first();
@@ -33,7 +33,7 @@ class AuthModel
         ];
     }
 
-    // update profile logic
+    // Logika Update Profile & Ubah Password
     public static function updateProfile($request)
     {
         $user = User::find(session('id_user'));
@@ -45,13 +45,33 @@ class AuthModel
             ];
         }
 
-        $user->name = $request->name;
-        $user->email = $request->email;
+        // --- VALIDASI PASSWORD LAMA ---
+        // Jika user mengisi field password baru, maka password lama wajib dicek
+        if ($request->filled('password')) {
+            
+            // 1. Cek apakah password lama diisi di form
+            if (!$request->filled('old_password')) {
+                return [
+                    'status' => false,
+                    'message' => 'Password lama wajib diisi jika ingin mengubah password.'
+                ];
+            }
 
-        if ($request->password) {
+            // 2. Verifikasi apakah password lama cocok dengan database
+            if (!Hash::check($request->old_password, $user->password)) {
+                return [
+                    'status' => false,
+                    'message' => 'Password lama yang Anda masukkan salah!'
+                ];
+            }
+
+            // 3. Jika cocok, baru di-hash password barunya
             $user->password = Hash::make($request->password);
         }
 
+        // Update Nama dan Email
+        $user->name = $request->name;
+        $user->email = $request->email;
         $user->save();
 
         return [

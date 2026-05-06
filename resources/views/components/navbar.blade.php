@@ -143,136 +143,167 @@
                 </button>
             </div>
 
-            <form action="{{ route('profile.update') }}" method="POST">
+            <form action="{{ route('profile.update') }}" method="POST" onsubmit="return validatePasswordForm()">
                 @csrf
                 <div class="space-y-4">
-
-                    <!-- NAMA (TETAP) -->
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Lengkap</label>
                         <input type="text" name="name" value="{{ session('name') }}" required
                             class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition">
                     </div>
 
-                    <!-- 🔥 TAMBAHAN EMAIL -->
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Email</label>
-                        <input type="email" name="email" value="{{ session('email') }}"
+                        <input type="email" name="email" value="{{ session('email') }}" required
                             class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition">
                     </div>
 
-                    <!-- 🔥 PASSWORD + TOGGLE -->
-                    <div class="relative">
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">Password Baru</label>
+                    <div class="pt-2">
+                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
+                            Ubah Password <span class="normal-case text-gray-400 font-normal">(opsional)</span>
+                        </p>
 
-                        <input 
-                            type="password" 
-                            id="passwordInput"
-                            name="password" 
-                            placeholder="Kosongkan jika tidak ingin ganti"
-                            class="w-full px-4 py-2 pr-10 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
-                        >
+                        <div class="relative mb-3">
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Password Lama</label>
+                            <input type="password" id="oldPasswordInput" name="old_password" placeholder="Masukkan password lama"
+                                class="w-full px-4 py-2 pr-10 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition">
+                            <button type="button" onclick="togglePassword('oldPasswordInput', 'eyeOld')" class="absolute right-3 top-9 text-gray-400">
+                                <svg id="eyeOld" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </button>
+                        </div>
 
-                        <span onclick="togglePassword()" 
-                            style="position:absolute; right:10px; top:38px; cursor:pointer;">
-                            👁️
-                        </span>
+                        <div class="relative mb-3">
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Password Baru</label>
+                            <input type="password" id="newPasswordInput" name="password" placeholder="Masukkan password baru"
+                                class="w-full px-4 py-2 pr-10 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                                oninput="checkPasswordStrength(this.value)">
+                            <button type="button" onclick="togglePassword('newPasswordInput', 'eyeNew')" class="absolute right-3 top-9 text-gray-400">
+                                <svg id="eyeNew" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </button>
+                            <div id="passwordStrengthBar" class="mt-2 hidden">
+                                <div class="flex gap-1">
+                                    <div id="bar1" class="h-1 flex-1 rounded-full bg-gray-200"></div>
+                                    <div id="bar2" class="h-1 flex-1 rounded-full bg-gray-200"></div>
+                                    <div id="bar3" class="h-1 flex-1 rounded-full bg-gray-200"></div>
+                                    <div id="bar4" class="h-1 flex-1 rounded-full bg-gray-200"></div>
+                                </div>
+                                <p id="passwordStrengthText" class="text-xs mt-1 text-gray-400"></p>
+                            </div>
+                        </div>
+
+                        <div class="relative">
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Konfirmasi Password Baru</label>
+                            <input type="password" id="confirmPasswordInput" name="password_confirmation" placeholder="Ulangi password baru"
+                                class="w-full px-4 py-2 pr-10 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                                oninput="checkPasswordMatch()">
+                            <button type="button" onclick="togglePassword('confirmPasswordInput', 'eyeConfirm')" class="absolute right-3 top-9 text-gray-400">
+                                <svg id="eyeConfirm" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </button>
+                            <p id="passwordMatchMsg" class="text-xs mt-1 hidden"></p>
+                        </div>
                     </div>
-
                 </div>
 
                 <div class="mt-8 flex gap-3">
-                    <button type="button" onclick="closeProfileModal()" 
-                        class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 rounded-xl hover:bg-gray-50 font-medium transition">
-                        Batal
-                    </button>
-
-                    <button type="submit" 
-                        class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-medium shadow-lg transition">
-                        Simpan
-                    </button>
+                    <button type="button" onclick="closeProfileModal()" class="flex-1 px-4 py-2 border border-gray-200 text-gray-600 rounded-xl hover:bg-gray-50 font-medium transition">Batal</button>
+                    <button type="submit" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-medium shadow-lg transition">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-
-
 <script>
+    // --- UI Controls ---
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const mobileMenu = document.getElementById('mobileMenu');
     const profileMenuDesktop = document.getElementById('profileMenuDesktop');
     const profileMenuMobile = document.getElementById('profileMenuMobile');
     const profileModal = document.getElementById('profileModal');
 
-    // Toggle Mobile Nav
     mobileMenuBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         mobileMenu.classList.toggle('hidden');
         if(profileMenuMobile) profileMenuMobile.classList.add('hidden');
     });
 
-    // Toggle Desktop Profile
-    function toggleProfileDesktop(e) {
-        if(e) e.stopPropagation();
-        profileMenuDesktop.classList.toggle('hidden');
-    }
+    function toggleProfileDesktop(e) { e.stopPropagation(); profileMenuDesktop.classList.toggle('hidden'); }
+    function toggleProfileMobile(e) { e.stopPropagation(); profileMenuMobile.classList.toggle('hidden'); mobileMenu.classList.add('hidden'); }
+    function openProfileModal() { profileModal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+    function closeProfileModal() { profileModal.classList.add('hidden'); document.body.style.overflow = 'auto'; resetPasswordFields(); }
 
-    // Toggle Mobile Profile
-    function toggleProfileMobile(e) {
-        if(e) e.stopPropagation();
-        profileMenuMobile.classList.toggle('hidden');
-        mobileMenu.classList.add('hidden');
-    }
-
-    // Modal Control
-    function openProfileModal() {
-        // Sembunyikan semua menu yang sedang terbuka
-        if(profileMenuDesktop) profileMenuDesktop.classList.add('hidden');
-        if(profileMenuMobile) profileMenuMobile.classList.add('hidden');
-        
-        // Tampilkan modal
-        profileModal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden'; // Lock scroll
-    }
-
-    function closeProfileModal() {
-        profileModal.classList.add('hidden');
-        document.body.style.overflow = 'auto'; // Unlock scroll
-    }
-
-    // Global Click Listener (untuk tutup menu saat klik di luar)
-    window.addEventListener('click', function(e) {
-        
-        // Tutup Dropdown Desktop
-        if (profileMenuDesktop && !profileMenuDesktop.contains(e.target)) {
-            profileMenuDesktop.classList.add('hidden');
-        }
-        // Tutup Dropdown Mobile
-        if (profileMenuMobile && !profileMenuMobile.contains(e.target)) {
-            profileMenuMobile.classList.add('hidden');
-        }
-        // Tutup Nav Mobile
-        if (mobileMenu && !mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-            mobileMenu.classList.add('hidden');
-        }
-        // Tutup Modal jika klik pada background hitam
-        if (e.target === profileModal) {
-            closeProfileModal();
-        }
-
-        
+    window.addEventListener('click', (e) => {
+        if (profileMenuDesktop && !profileMenuDesktop.contains(e.target)) profileMenuDesktop.classList.add('hidden');
+        if (profileMenuMobile && !profileMenuMobile.contains(e.target)) profileMenuMobile.classList.add('hidden');
+        if (mobileMenu && !mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) mobileMenu.classList.add('hidden');
+        if (e.target === profileModal) closeProfileModal();
     });
-    function togglePassword() {
-    const input = document.getElementById("passwordInput");
 
-    if (!input) return;
-
-    if (input.type === "password") {
-        input.type = "text";
-    } else {
-        input.type = "password";
+    // --- Password Logic ---
+    function togglePassword(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />';
+        } else {
+            input.type = 'password';
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />';
+        }
     }
-}
+
+    function checkPasswordStrength(value) {
+        const bar = document.getElementById('passwordStrengthBar');
+        const text = document.getElementById('passwordStrengthText');
+        if (value.length === 0) { bar.classList.add('hidden'); return; }
+        bar.classList.remove('hidden');
+        let score = (value.length >= 6 ? 1 : 0) + (/[A-Z]/.test(value) ? 1 : 0) + (/[0-9]/.test(value) ? 1 : 0) + (/[^A-Za-z0-9]/.test(value) ? 1 : 0);
+        const colors = ['bg-red-400', 'bg-orange-400', 'bg-yellow-400', 'bg-green-500'];
+        const labels = ['Lemah', 'Cukup', 'Kuat', 'Sangat Kuat'];
+        for (let i = 1; i <= 4; i++) {
+            let b = document.getElementById('bar' + i);
+            b.className = `h-1 flex-1 rounded-full ${i <= score ? colors[score-1] : 'bg-gray-200'} transition-all`;
+        }
+        text.textContent = labels[score-1] || 'Sangat Lemah';
+    }
+
+    function checkPasswordMatch() {
+        const msg = document.getElementById('passwordMatchMsg');
+        const match = document.getElementById('newPasswordInput').value === document.getElementById('confirmPasswordInput').value;
+        msg.classList.remove('hidden');
+        msg.textContent = match ? '✓ Password cocok' : '✗ Password tidak cocok';
+        msg.className = `text-xs mt-1 ${match ? 'text-green-600' : 'text-red-500'}`;
+    }
+
+    function validatePasswordForm() {
+        const oldP = document.getElementById('oldPasswordInput').value;
+        const newP = document.getElementById('newPasswordInput').value;
+        const confP = document.getElementById('confirmPasswordInput').value;
+        if (newP || confP) {
+            if (!oldP) { alert('Password lama harus diisi!'); return false; }
+            if (newP !== confP) { alert('Konfirmasi password tidak cocok!'); return false; }
+            if (newP.length < 6) { alert('Password baru minimal 6 karakter!'); return false; }
+        }
+        return true;
+    }
+
+    function resetPasswordFields() {
+        ['oldPasswordInput', 'newPasswordInput', 'confirmPasswordInput'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('passwordStrengthBar').classList.add('hidden');
+        document.getElementById('passwordMatchMsg').classList.add('hidden');
+    }
 </script>
+
+@if(session('error'))
+    <script>alert("Gagal: {{ session('error') }}");</script>
+@endif
+
+@if(session('success'))
+    <script>alert("Berhasil: {{ session('success') }}");</script>
+@endif

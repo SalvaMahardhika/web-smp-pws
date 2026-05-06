@@ -52,6 +52,7 @@ class LoginController extends Controller
     }
 
     // update profile
+    // update profile logic
     public function updateProfile(Request $request)
     {
         $request->validate([
@@ -61,16 +62,17 @@ class LoginController extends Controller
 
         $result = AuthModel::updateProfile($request);
 
+        // Jika result status false (karena password lama salah), kembali dengan pesan error
         if (!$result['status']) {
             return back()->with('error', $result['message']);
         }
 
         $user = $result['data'];
 
-        // update session biar navbar langsung berubah
-        Session::put('name', $user->name);
-        Session::put('email', $user->email);
+        // Update session agar navbar langsung berubah secara real-time
+        \Illuminate\Support\Facades\Session::put('name', $user->name);
+        \Illuminate\Support\Facades\Session::put('email', $user->email);
 
-        return back()->with('success', 'Profile berhasil diupdate');
+        return back()->with('success', 'Profil berhasil diperbarui');
     }
 }
