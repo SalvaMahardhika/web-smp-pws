@@ -45,112 +45,105 @@
         </div>
     </section>
 
-    {{-- ======================= BERITA ======================= --}}
-<section id="berita" class="py-28 px-6 md:px-10 bg-slate-50">
-    <div class="max-w-7xl mx-auto">
+    {{-- ======================= BERITA (UPDATED MOBILE SLIDER) ======================= --}}
+    <section id="berita" class="py-28 px-6 md:px-10 bg-slate-50">
+        <div class="max-w-7xl mx-auto">
 
-        <div class="text-center mb-20">
-            <h2 class="text-4xl md:text-5xl font-bold">Berita Terbaru</h2>
-            <p class="text-slate-400 mt-4 max-w-xl mx-auto text-lg leading-relaxed">
-                Informasi dan kegiatan terbaru dari sekolah kami.
-            </p>
+            <div class="text-center mb-20">
+                <h2 class="text-4xl md:text-5xl font-bold">Berita Terbaru</h2>
+                <p class="text-slate-400 mt-4 max-w-xl mx-auto text-lg leading-relaxed">
+                    Informasi dan kegiatan terbaru dari sekolah kami.
+                </p>
 
-            @if(session('login') && in_array(session('role'), ['admin', 'super_admin']))
-                <button onclick="openModal('modalTambahBerita')" 
-                    class="mt-6 bg-slate-900 text-white px-8 py-3 rounded-full font-bold shadow-lg">
-                    + Tambah Berita
-                </button>
-            @endif
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-10">
-
-            @forelse ($berita as $b)
-
-            <div class="bg-white rounded-[2rem] shadow-lg overflow-hidden group hover-lift relative">
-
-                {{-- 🔥 BADGE STATUS (ADMIN ONLY) --}}
                 @if(session('login') && in_array(session('role'), ['admin', 'super_admin']))
-                    @if($b->status == 0)
-                        <span class="absolute top-4 left-4 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full z-20">
-                            OFF
-                        </span>
-                    @endif
+                    <button onclick="openModal('modalTambahBerita')" 
+                        class="mt-6 bg-slate-900 text-white px-8 py-3 rounded-full font-bold shadow-lg">
+                        + Tambah Berita
+                    </button>
                 @endif
-
-                {{-- 🔥 ACTION BUTTON ADMIN --}}
-                @if(session('login') && in_array(session('role'), ['admin', 'super_admin']))
-                    <div class="absolute top-4 right-4 flex items-center gap-2 z-20 opacity-0 group-hover:opacity-100 transition">
-
-                 {{-- TOGGLE --}}
-                    <form action="{{ route('berita.toggle', $b->id_berita) }}" method="POST">
-                @csrf
-                <input type="checkbox"
-                onchange="this.form.submit()"
-                  {{$b->status ? 'checked' : '' }}>
-                </form>
-
-                {{-- EDIT --}}
-                <button onclick='openEditBerita(@json($b))'
-                class="bg-white/90 backdrop-blur px-3 py-1 text-xs font-bold rounded shadow text-blue-600">
-        Edit
-    </button>
-
-                 {{-- DELETE --}}
-                <form action="{{ route('berita.destroy', $b->id_berita) }}" method="POST">
-                @csrf @method('DELETE')
-                <button type="submit"
-                onclick="return confirm('Hapus berita?')"
-                class="bg-white/90 backdrop-blur px-3 py-1 text-xs font-bold rounded shadow text-red-600">
-            Hapus
-            </button>
-    </form>
-
-</div>
-@endif
-
-                {{-- GAMBAR --}}
-                <div class="h-56 overflow-hidden">
-                    <img src="{{ asset('img/berita/' . $b->gambar) }}"
-                         class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                </div>
-
-                <div class="p-6">
-
-                    {{-- TANGGAL --}}
-                    <p class="text-xs text-blue-600 font-bold mb-2">
-                        {{ \Carbon\Carbon::parse($b->tanggal)->format('d M Y') }}
-                    </p>
-
-                    {{-- JUDUL --}}
-                    <h3 class="text-lg font-bold text-slate-800 mb-3 line-clamp-2">
-                        {{ $b->judul }}
-                    </h3>
-
-                    {{-- DESKRIPSI --}}
-                    <p class="text-sm text-slate-500 mb-4 line-clamp-3">
-                        {{ \Illuminate\Support\Str::limit($b->isi, 100) }}
-                    </p>
-
-                    {{-- LINK DETAIL --}}
-                    <a href="{{ route('berita.detail', $b->id_berita) }}"
-                       class="text-blue-600 font-bold text-sm hover:underline">
-                        Baca Selengkapnya →
-                    </a>
-
-                </div>
             </div>
 
-            @empty
-                <p class="text-center text-slate-400 col-span-3">
-                    Belum ada berita tersedia.
-                </p>
-            @endforelse
+            {{-- Container dengan scroll horizontal pada mobile, grid pada desktop --}}
+            <div class="flex md:grid md:grid-cols-3 gap-10 overflow-x-auto hide-scrollbar snap-x snap-mandatory pb-12">
 
+                @forelse ($berita as $b)
+
+                <div class="min-w-[85%] md:min-w-full bg-white rounded-[2rem] shadow-lg overflow-hidden group hover-lift relative snap-center">
+
+                    {{-- 🔥 BADGE STATUS (ADMIN ONLY) --}}
+                    @if(session('login') && in_array(session('role'), ['admin', 'super_admin']))
+                        @if($b->status == 0)
+                            <span class="absolute top-4 left-4 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full z-20">
+                                OFF
+                            </span>
+                        @endif
+                    @endif
+
+                    {{-- 🔥 ACTION BUTTON ADMIN --}}
+                    @if(session('login') && in_array(session('role'), ['admin', 'super_admin']))
+                        <div class="absolute top-4 right-4 flex items-center gap-2 z-20 opacity-0 group-hover:opacity-100 transition">
+                            {{-- TOGGLE --}}
+                            <form action="{{ route('berita.toggle', $b->id_berita) }}" method="POST">
+                                @csrf
+                                <input type="checkbox" onchange="this.form.submit()" {{$b->status ? 'checked' : '' }}>
+                            </form>
+
+                            {{-- EDIT --}}
+                            <button onclick='openEditBerita(@json($b))'
+                                class="bg-white/90 backdrop-blur px-3 py-1 text-xs font-bold rounded shadow text-blue-600">
+                                Edit
+                            </button>
+
+                            {{-- DELETE --}}
+                            <form action="{{ route('berita.destroy', $b->id_berita) }}" method="POST">
+                                @csrf @method('DELETE')
+                                <button type="submit" onclick="return confirm('Hapus berita?')"
+                                    class="bg-white/90 backdrop-blur px-3 py-1 text-xs font-bold rounded shadow text-red-600">
+                                    Hapus
+                                </button>
+                            </form>
+                        </div>
+                    @endif
+
+                    {{-- GAMBAR --}}
+                    <div class="h-56 overflow-hidden">
+                        <img src="{{ asset('img/berita/' . $b->gambar) }}"
+                             class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                    </div>
+
+                    <div class="p-6">
+                        {{-- TANGGAL --}}
+                        <p class="text-xs text-blue-600 font-bold mb-2">
+                            {{ \Carbon\Carbon::parse($b->tanggal)->format('d M Y') }}
+                        </p>
+
+                        {{-- JUDUL --}}
+                        <h3 class="text-lg font-bold text-slate-800 mb-3 line-clamp-2">
+                            {{ $b->judul }}
+                        </h3>
+
+                        {{-- DESKRIPSI --}}
+                        <p class="text-sm text-slate-500 mb-4 line-clamp-3">
+                            {{ \Illuminate\Support\Str::limit($b->isi, 100) }}
+                        </p>
+
+                        {{-- LINK DETAIL --}}
+                        <a href="{{ route('berita.detail', $b->id_berita) }}"
+                           class="text-blue-600 font-bold text-sm hover:underline">
+                            Baca Selengkapnya →
+                        </a>
+                    </div>
+                </div>
+
+                @empty
+                    <p class="text-center text-slate-400 col-span-3 w-full">
+                        Belum ada berita tersedia.
+                    </p>
+                @endforelse
+
+            </div>
         </div>
-
-    </div>
-</section>
+    </section>
 
     {{-- SECTION FASILITAS --}}
     <section id="fasilitas" class="relative py-28 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 px-6 md:px-10 overflow-hidden">
@@ -253,7 +246,8 @@
 
     <x-footer />
 
-    {{-- MODAL DETAIL BERITA (BARU) --}}
+    {{-- SEMUA MODAL --}}
+    {{-- MODAL DETAIL BERITA --}}
     <div id="modalDetailBerita" class="fixed inset-0 z-[200] hidden modal-bg flex items-center justify-center p-4">
         <div class="bg-white rounded-[2.5rem] max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
             <div class="relative">
@@ -311,12 +305,12 @@
             <form action="{{ route('eskul.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                 @csrf
                 <input type="text" name="nama_eskul" placeholder="Nama Eskul" class="w-full p-4 bg-slate-50 rounded-2xl border outline-none focus:border-blue-500" required>
-                <select id="edit_eskul_guru" name="id_guru" class="w-full p-4 bg-slate-50 rounded-2xl border outline-none focus:border-blue-500" required>
-    <option value="">Pilih Pembina</option>
-    @foreach ($guru as $g)
-        <option value="{{ $g->id_guru }}">{{ $g->nama_guru }}</option>
-    @endforeach
-</select>
+                <select id="tambah_eskul_guru" name="id_guru" class="w-full p-4 bg-slate-50 rounded-2xl border outline-none focus:border-blue-500" required>
+                    <option value="">Pilih Pembina</option>
+                    @foreach ($guru as $g)
+                        <option value="{{ $g->id_guru }}">{{ $g->nama_guru }}</option>
+                    @endforeach
+                </select>
                 <textarea name="deskripsi" placeholder="Deskripsi Singkat" rows="3" class="w-full p-4 bg-slate-50 rounded-2xl border outline-none focus:border-blue-500" required></textarea>
                 <input type="file" name="gambar" class="w-full text-sm" required>
                 <div class="flex gap-3 pt-4">
@@ -334,12 +328,12 @@
             <form id="formEditEskul" action="" method="POST" enctype="multipart/form-data" class="space-y-4">
                 @csrf
                 <input type="text" id="edit_eskul_nama" name="nama_eskul" class="w-full p-4 bg-slate-50 rounded-2xl border outline-none focus:border-blue-500" required>
-                <select name="id_guru" class="w-full p-4 bg-slate-50 rounded-2xl border outline-none focus:border-blue-500" required>
-    <option value="">Pilih Pembina</option>
-    @foreach ($guru as $g)
-        <option value="{{ $g->id_guru }}">{{ $g->nama_guru }}</option>
-    @endforeach
-</select>
+                <select id="edit_eskul_guru" name="id_guru" class="w-full p-4 bg-slate-50 rounded-2xl border outline-none focus:border-blue-500" required>
+                    <option value="">Pilih Pembina</option>
+                    @foreach ($guru as $g)
+                        <option value="{{ $g->id_guru }}">{{ $g->nama_guru }}</option>
+                    @endforeach
+                </select>
                 <textarea id="edit_eskul_desk" name="deskripsi" rows="3" class="w-full p-4 bg-slate-50 rounded-2xl border outline-none focus:border-blue-500" required></textarea>
                 <input type="file" name="gambar" class="w-full text-sm">
                 <div class="flex gap-3 pt-4">
