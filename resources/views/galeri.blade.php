@@ -129,8 +129,9 @@
         </div>
 
         @if(!session('login'))
+        {{-- BAGIAN YANG DIPERBAIKI: Menambahkan class break-words agar teks tidak tembus --}}
         <div class="mt-10 bg-blue-50 border-l-4 border-blue-600 p-6 rounded-2xl">
-            <p class="text-gray-700 leading-relaxed italic">
+            <p class="text-gray-700 leading-relaxed italic break-words">
                 "{{ $data['keterangan'] }}"
             </p>
         </div>
