@@ -36,6 +36,7 @@
     @endif
 </section>
 
+{{-- Pengganti alert flash session bawaan dengan UI Tailwind yang bersih --}}
 @if(session('success'))
 <div class="max-w-4xl mx-auto mt-8 px-4">
     <div class="p-4 bg-emerald-50 border-l-4 border-emerald-500 text-emerald-800 rounded-r-xl shadow-sm">
@@ -55,7 +56,7 @@
             @method('PUT')
             <div class="flex items-center justify-between">
                 <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Mode Edit Album</span>
-                <button type="button" onclick="confirmDeleteAlbum('{{ $data['id'] }}', '{{ $data['judul'] }}')" 
+                <button type="button" onclick="showConfirmDeleteAlbum('{{ $data['id'] }}', '{{ $data['judul'] }}')" 
                     class="text-red-500 hover:text-red-700 text-sm font-bold flex items-center gap-1 transition">
                     Hapus Album
                 </button>
@@ -111,7 +112,7 @@
                 <img src="{{ asset('img/imggaleri/' . $foto) }}" class="max-h-64 md:max-h-72 w-auto object-cover">
                 
                 @if(session('login'))
-                <button type="button" onclick="confirmDeleteFoto(this)"
+                <button type="button" onclick="showConfirmDeleteFoto(this)"
                       class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all p-2 bg-white/90 text-red-600 rounded-xl shadow-lg hover:bg-red-600 hover:text-white backdrop-blur-sm">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -129,9 +130,8 @@
         </div>
 
         @if(!session('login'))
-        {{-- BAGIAN YANG DIPERBAIKI: Menambahkan class break-words agar teks tidak tembus --}}
         <div class="mt-10 bg-blue-50 border-l-4 border-blue-600 p-6 rounded-2xl">
-            <p class="text-gray-700 leading-relaxed italic break-words">
+            <p class="text-gray-700 leading-relaxed italic">
                 "{{ $data['keterangan'] }}"
             </p>
         </div>
@@ -191,12 +191,30 @@
         </div>
     </div>
 </div>
+
+<div id="customConfirmModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+    <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm p-6 text-center transform transition-all scale-95 duration-200 border border-gray-100">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center text-3xl bg-red-50 text-red-600">
+            ⚠️
+        </div>
+        <h3 id="confirmTitle" class="text-xl font-bold text-gray-900 mb-2">Konfirmasi Hapus</h3>
+        <p id="confirmMessage" class="text-sm text-gray-500 mb-6 leading-relaxed"></p>
+        <div class="flex gap-3">
+            <button onclick="closeConfirmModal()" class="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition focus:outline-none">
+                Batal
+            </button>
+            <button id="confirmExecuteBtn" class="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-lg shadow-red-100 transition focus:outline-none">
+                Ya, Hapus
+            </button>
+        </div>
+    </div>
+</div>
 @endif
 
 <x-footer />
 
 <script>
-    // Logika Modal
+    // Logika Modal Tambah Album
     function openAddAlbumModal() {
         const modal = document.getElementById('modalTambahAlbum');
         modal.classList.remove('hidden');
@@ -209,25 +227,60 @@
         document.body.style.overflow = 'auto';
     }
 
-    // Tutup modal jika klik luar
-    window.onclick = function(event) {
-        const modal = document.getElementById('modalTambahAlbum');
-        if (event.target == modal) closeAddAlbumModal();
+    // Variabel global untuk menyimpan referensi form yang akan dieksekusi
+    let formToSubmit = null;
+
+    // Fungsi membuka Pop-up Konfirmasi Kustom
+    function openConfirmModal(title, message, callbackAction) {
+        document.getElementById('confirmTitle').innerText = title;
+        document.getElementById('confirmMessage').innerText = message;
+        
+        const executeBtn = document.getElementById('confirmExecuteBtn');
+        // Reset event listener agar tidak menumpuk
+        executeBtn.onclick = function() {
+            callbackAction();
+            closeConfirmModal();
+        };
+
+        const modal = document.getElementById('customConfirmModal');
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
     }
 
-    // Konfirmasi Hapus Album
-    function confirmDeleteAlbum(id, judul) {
-        if (confirm("⚠️ PERINGATAN: Apakah Anda yakin ingin menghapus seluruh album '" + judul + "'? Semua foto di dalamnya akan ikut terhapus secara permanen.")) {
+    function closeConfirmModal() {
+        const modal = document.getElementById('customConfirmModal');
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        formToSubmit = null;
+    }
+
+    // Handler Konfirmasi Hapus Album Kustom
+    function showConfirmDeleteAlbum(id, judul) {
+        const title = "Hapus Album?";
+        const message = "Apakah Anda yakin ingin menghapus seluruh album '" + judul + "'? Semua foto di dalamnya akan ikut terhapus secara permanen.";
+        
+        openConfirmModal(title, message, function() {
             document.getElementById('delete-album-' + id).submit();
-        }
+        });
     }
 
-    // Konfirmasi Hapus Foto
-    function confirmDeleteFoto(btn) {
-        if (confirm("Hapus foto ini dari album?")) {
-            // Mengambil form terdekat (sibling selanjutnya) dan mensubmitnya
-            btn.nextElementSibling.submit();
-        }
+    // Handler Konfirmasi Hapus Foto Kustom
+    function showConfirmDeleteFoto(btn) {
+        const title = "Hapus Foto?";
+        const message = "Apakah Anda yakin ingin menghapus foto ini dari album?";
+        const targetForm = btn.nextElementSibling; // Mengambil form hapus di bawah tombol
+        
+        openConfirmModal(title, message, function() {
+            targetForm.submit();
+        });
+    }
+
+    // Tutup modal jika klik luar wilayah konten modal
+    window.onclick = function(event) {
+        const modalTambah = document.getElementById('modalTambahAlbum');
+        const modalConfirm = document.getElementById('customConfirmModal');
+        if (event.target == modalTambah) closeAddAlbumModal();
+        if (event.target == modalConfirm) closeConfirmModal();
     }
 </script>
 
