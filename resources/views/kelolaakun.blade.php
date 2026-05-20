@@ -49,7 +49,6 @@
                     <td class="p-3">{{ $user->name }}</td>
                     <td class="p-3">{{ $user->email }}</td>
 
-                    <!-- STATUS -->
                     <td class="p-3 text-center">
                         <label class="inline-flex items-center cursor-pointer">
                             <input type="checkbox"
@@ -71,7 +70,6 @@
 
                     <td class="p-3 text-center space-x-2">
 
-                        <!-- EDIT -->
                         <button 
                             onclick="openEdit(this)"
                             data-id="{{ $user->id_user }}"
@@ -81,14 +79,14 @@
                             Edit
                         </button>
 
-                        <!-- 🔥 HAPUS + KONFIRMASI -->
-                        <form action="/kelola-akun/{{ $user->id_user }}" method="POST" style="display:inline"
-                              onsubmit="return confirm('Yakin ingin menghapus akun ini? Data tidak bisa dikembalikan!')">
+                        <button type="button" onclick="showConfirmDeleteAkun('{{ $user->id_user }}', '{{ $user->name }}')"
+                            class="bg-red-500 text-white px-3 py-1 rounded">
+                            Hapus
+                        </button>
+
+                        <form id="delete-akun-{{ $user->id_user }}" action="/kelola-akun/{{ $user->id_user }}" method="POST" class="hidden">
                             @csrf
                             @method('DELETE')
-                            <button class="bg-red-500 text-white px-3 py-1 rounded">
-                                Hapus
-                            </button>
                         </form>
 
                     </td>
@@ -103,7 +101,6 @@
 
 </main>
 
-<!-- MODAL TAMBAH -->
 <div id="tambahModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center">
     <div class="bg-white p-6 rounded-xl w-96">
         <h2 class="text-lg font-bold text-center mb-4">Tambah Akun Admin</h2>
@@ -127,7 +124,6 @@
     </div>
 </div>
 
-<!-- MODAL EDIT -->
 <div id="editModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center">
     <div class="bg-white p-6 rounded-xl w-96">
         <h2 class="text-lg font-bold text-center mb-4">Edit Akun Admin</h2>
@@ -138,19 +134,19 @@
             <input type="text" name="name" id="editName" class="w-full border p-2 rounded mb-3">
             <input type="email" name="email" id="editEmail" class="w-full border p-2 rounded mb-3">
             <div class="relative mb-4">
-    <input 
-        type="password" 
-        id="editPassword"
-        name="password" 
-        placeholder="Password (opsional)" 
-        class="w-full border p-2 pr-10 rounded"
-    >
+                <input 
+                    type="password" 
+                    id="editPassword"
+                    name="password" 
+                    placeholder="Password (opsional)" 
+                    class="w-full border p-2 pr-10 rounded"
+                >
 
-    <span onclick="togglePasswordEdit(this)" 
-        class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer">
-        👁️
-    </span>
-</div>
+                <span onclick="togglePasswordEdit(this)" 
+                    class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer">
+                    👁️
+                </span>
+            </div>
             <div class="flex justify-end gap-2">
                 <button type="button" onclick="closeModal('editModal')" class="bg-red-400 text-white px-4 py-1 rounded">
                     Keluar
@@ -160,6 +156,24 @@
                 </button>
             </div>
         </form>
+    </div>
+</div>
+
+<div id="customConfirmModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+    <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm p-6 text-center transform transition-all scale-95 duration-200 border border-gray-100">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center text-3xl bg-red-50 text-red-600">
+            ⚠️
+        </div>
+        <h3 id="confirmTitle" class="text-xl font-bold text-gray-900 mb-2">Konfirmasi Hapus</h3>
+        <p id="confirmMessage" class="text-sm text-gray-500 mb-6 leading-relaxed"></p>
+        <div class="flex gap-3">
+            <button onclick="closeConfirmModal()" class="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition focus:outline-none">
+                Batal
+            </button>
+            <button id="confirmExecuteBtn" class="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-lg shadow-red-100 transition focus:outline-none">
+                Ya, Hapus
+            </button>
+        </div>
     </div>
 </div>
 
@@ -200,6 +214,7 @@ function toggleStatus(el, id){
         body: JSON.stringify({ status: status })
     });
 }
+
 function togglePasswordEdit(el){
     const input = document.getElementById("editPassword");
 
@@ -211,8 +226,55 @@ function togglePasswordEdit(el){
         el.innerText = "👁️";
     }
 }
-</script>
 
+// LOGIKA MODAL KONFIRMASI KUSTOM (Sama seperti galeri.blade.php)
+function openConfirmModal(title, message, callbackAction) {
+    document.getElementById('confirmTitle').innerText = title;
+    document.getElementById('confirmMessage').innerText = message;
+    
+    const executeBtn = document.getElementById('confirmExecuteBtn');
+    executeBtn.onclick = function() {
+        callbackAction();
+        closeConfirmModal();
+    };
+
+    const modal = document.getElementById('customConfirmModal');
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModalAndNormalize() {
+    // Fungsi bantuan untuk menormalkan overflow body saat menutup modal apa saja
+    document.body.style.overflow = 'auto';
+}
+
+function closeConfirmModal() {
+    const modal = document.getElementById('customConfirmModal');
+    modal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+// Handler Konfirmasi Hapus Akun Admin
+function showConfirmDeleteAkun(id, name) {
+    const title = "Hapus Akun?";
+    const message = "Apakah Anda yakin ingin menghapus akun '" + name + "'? Data tidak bisa dikembalikan!";
+    
+    openConfirmModal(title, message, function() {
+        document.getElementById('delete-akun-' + id).submit();
+    });
+}
+
+// Tutup modal jika klik di luar wilayah konten modal
+window.onclick = function(event) {
+    const modalConfirm = document.getElementById('customConfirmModal');
+    const modalTambah = document.getElementById('tambahModal');
+    const modalEdit = document.getElementById('editModal');
+    
+    if (event.target == modalConfirm) closeConfirmModal();
+    if (event.target == modalTambah) closeModal('tambahModal');
+    if (event.target == modalEdit) closeModal('editModal');
+}
+</script>
 
 </body>
 </html>
