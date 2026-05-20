@@ -131,7 +131,8 @@
     </div>
 </nav>
 
-<div id="profileModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black bg-opacity-50 px-4">
+{{-- MODAL EDIT PROFILE --}}
+<div id="profileModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black bg-opacity-50 px-4 backdrop-blur-sm">
     <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all scale-95 duration-200">
         <div class="p-6">
             <div class="flex justify-between items-center mb-6">
@@ -219,6 +220,19 @@
     </div>
 </div>
 
+{{-- POP-UP NOTIFIKASI KUSTOM (GANTI ALERT BROWSER) --}}
+<div id="customAlertModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center bg-black bg-opacity-60 px-4 backdrop-blur-sm transition-all duration-300">
+    <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm p-6 text-center transform transition-all scale-95 duration-200 border border-gray-100">
+        <div id="alertIconContainer" class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center text-3xl">
+            </div>
+        <h3 id="alertTitle" class="text-xl font-bold text-gray-900 mb-2"></h3>
+        <p id="alertMessage" class="text-sm text-gray-500 mb-6 leading-relaxed"></p>
+        <button onclick="closeCustomAlert()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl shadow-lg shadow-blue-100 transition-all focus:outline-none">
+            Mengerti
+        </button>
+    </div>
+</div>
+
 <script>
     // --- UI Controls ---
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
@@ -244,6 +258,38 @@
         if (mobileMenu && !mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) mobileMenu.classList.add('hidden');
         if (e.target === profileModal) closeProfileModal();
     });
+
+    // --- POP-UP NOTIFIKASI LOGIC ---
+    function showCustomAlert(title, message, type = 'success') {
+        const modal = document.getElementById('customAlertModal');
+        const iconContainer = document.getElementById('alertIconContainer');
+        const titleEl = document.getElementById('alertTitle');
+        const msgEl = document.getElementById('alertMessage');
+
+        titleEl.innerText = title;
+        msgEl.innerText = message;
+
+        if (type === 'success') {
+            iconContainer.className = "w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center text-3xl bg-emerald-50 text-emerald-600";
+            iconContainer.innerHTML = "✓";
+        } else {
+            iconContainer.className = "w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center text-3xl bg-red-50 text-red-600";
+            iconContainer.innerHTML = "✕";
+        }
+
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.firstElementChild.classList.remove('scale-95', 'opacity-0');
+        }, 10);
+    }
+
+    function closeCustomAlert() {
+        const modal = document.getElementById('customAlertModal');
+        modal.firstElementChild.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 200);
+    }
 
     // --- Password Logic ---
     function togglePassword(inputId, iconId) {
@@ -286,9 +332,18 @@
         const newP = document.getElementById('newPasswordInput').value;
         const confP = document.getElementById('confirmPasswordInput').value;
         if (newP || confP) {
-            if (!oldP) { alert('Password lama harus diisi!'); return false; }
-            if (newP !== confP) { alert('Konfirmasi password tidak cocok!'); return false; }
-            if (newP.length < 6) { alert('Password baru minimal 6 karakter!'); return false; }
+            if (!oldP) { 
+                showCustomAlert('Validasi Gagal', 'Password lama harus diisi!', 'error'); 
+                return false; 
+            }
+            if (newP !== confP) { 
+                showCustomAlert('Validasi Gagal', 'Konfirmasi password tidak cocok!', 'error'); 
+                return false; 
+            }
+            if (newP.length < 6) { 
+                showCustomAlert('Validasi Gagal', 'Password baru minimal 6 karakter!', 'error'); 
+                return false; 
+            }
         }
         return true;
     }
@@ -300,10 +355,19 @@
     }
 </script>
 
+{{-- MENANGKAP SESSION LARAVEL DAN DIUBAH MENJADI MODAL POP-UP KUSTOM --}}
 @if(session('error'))
-    <script>alert("Gagal: {{ session('error') }}");</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            showCustomAlert('Gagal', '{{ session("error") }}', 'error');
+        });
+    </script>
 @endif
 
 @if(session('success'))
-    <script>alert("Berhasil: {{ session('success') }}");</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            showCustomAlert('Berhasil', '{{ session("success") }}', 'success');
+        });
+    </script>
 @endif
