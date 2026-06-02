@@ -48,8 +48,8 @@ Route::middleware(['cek.status'])->group(function () {
     
 
     // login & profile
-    Route::get('/auth-smp-admin-2026', [LoginController::class, 'index'])->name('login.admin');
-    Route::post('/auth-smp-admin-2026', [LoginController::class, 'login'])->name('login.process');
+    Route::get('/auth-smp-admin', [LoginController::class, 'index'])->name('login.admin');
+    Route::post('/auth-smp-admin', [LoginController::class, 'login'])->name('login.process');
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
     Route::post('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
 

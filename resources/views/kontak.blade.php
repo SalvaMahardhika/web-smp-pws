@@ -63,7 +63,7 @@
                 </div>
                 <div>
                     <h3 class="font-bold text-slate-800 font-poppins">Youtube</h3>
-                    <a href="http://www.youtube.com/@spensapurbojpn" target="_blank" class="text-slate-500 text-sm hover:text-blue-600 transition-colors break-all">
+                    <a href="https://www.youtube.com/@spensapurbjn" target="_blank" class="text-slate-500 text-sm hover:text-blue-600 transition-colors break-all">
                         @spensapurbojpn
                     </a>
                 </div>
